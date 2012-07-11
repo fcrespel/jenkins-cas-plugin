@@ -1,0 +1,13 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:entry title="${%casServerUrl}" field="casServerUrl">
+    <f:textbox />
+  </f:entry>
+  <f:dropdownDescriptorSelector title="${%casProtocol}" field="casProtocol" />
+  <f:entry title="${%forceRenewal}" field="forceRenewal">
+    <f:checkbox />
+  </f:entry>
+  <f:entry title="${%enableSingleSignOut}" field="enableSingleSignOut">
+    <f:checkbox default="true" />
+  </f:entry>
+</j:jelly>

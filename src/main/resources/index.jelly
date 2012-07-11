@@ -1,0 +1,4 @@
+<div>
+  This plugin enables use of <a href="http://www.jasig.org/cas">Jasig CAS</a>
+  as an authentication source, for single sign-on and single sign-out support.
+</div>

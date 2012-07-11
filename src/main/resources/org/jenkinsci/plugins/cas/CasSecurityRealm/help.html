@@ -1,0 +1,16 @@
+<div>
+    Use <a href="http://www.jasig.org/cas">Jasig CAS</a> for authentication and single sign-on.
+
+    <p>
+    With this option, users will be redirected to CAS when their identity needs to be verified.
+    The CAS server will either display a login form to enter credentials, or immediately redirect
+    back to Jenkins if the user had already signed successfuly into another CAS-enabled application.
+    
+    <p>
+    This security realm also supports the <a href="https://wiki.jasig.org/display/CASUM/Attributes">Attribute Release</a>
+    feature out-of-the-box when using the SAML 1.1 protocol; the CAS 1.0 and 2.0 protocols require
+    custom extensions to provide this functionality. Attributes enable the synchronization of the
+    user's full name and email address with CAS-provided values (e.g. extracted from a LDAP directory),
+    and bring support for Jenkins groups/roles mapping.
+
+</div>

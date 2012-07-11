@@ -1,0 +1,19 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:block>
+    <table>
+      <f:description>${%description("http://www.jasig.org/cas/protocol", "https://wiki.jasig.org/display/CASUM/Attributes")}</f:description>
+    </table>
+  </f:block>
+  <f:advanced>
+    <f:entry title="${%authoritiesAttribute}" field="authoritiesAttribute">
+      <f:textbox default="groups,roles" />
+    </f:entry>
+    <f:entry title="${%fullNameAttribute}" field="fullNameAttribute">
+      <f:textbox default="cn" />
+    </f:entry>
+    <f:entry title="${%emailAttribute}" field="emailAttribute">
+      <f:textbox default="mail" />
+    </f:entry>
+  </f:advanced>
+</j:jelly>
