@@ -30,7 +30,7 @@ response.readLines()[6].split(';')*.trim().collect {
 
     <p>
         As a second example, to add roles managed within the script as lists of usernames,
-        the following script adds the authority/role/group "kfs-dev" to "uhm-student" and "uhsystem-staff"
+        the following script adds the authority/role/group "hudson-adm" and "developer" to "uhm-student" and "uhsystem-staff"
         for the above validation response:
         <pre>
 def roles = response.readLines()[6].split(';')*.trim().collect {
@@ -43,8 +43,9 @@ def roles = response.readLines()[6].split(';')*.trim().collect {
 }
 def username = response.readLines()[1].trim()
 roles += [
-    'kfs-dev': ['raejean', 'lodo', 'bly', 'jbeutel'], // etc...
-    'kfs-func': ['kegami', 'tammy', 'jfujita'] // etc...
+    'hudson-adm': ['jbeutel', 'jdoe', 'rsmith'],
+    'developer': ['jbeutel', 'jdoe', 'sclaus', 'ebunny'],
+    'tester': ['itokugawa', 'hmatsu'] // etc...
 ].collect { role, names -> names.contains(username) ? role : [] }.flatten()
 return roles
         </pre>
