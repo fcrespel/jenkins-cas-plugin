@@ -161,6 +161,34 @@ THE SOFTWARE.
 	</dependencies>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+			        <groupId>org.jenkins-ci.tools</groupId>
+			        <artifactId>maven-hpi-plugin</artifactId>
+			        <dependencies>
+			        	<!-- Fix for outdated xerces:xercesImpl:jar:2.6.2, which doesn't have a proper DocumentBuilderFactory.setFeature(String, boolean) method required by opensaml -->
+						<dependency>
+							<groupId>xerces</groupId>
+							<artifactId>xercesImpl</artifactId>
+							<version>2.9.1</version>
+						</dependency>
+						<dependency>
+							<groupId>xom</groupId>
+							<artifactId>xom</artifactId>
+							<version>1.0</version>
+							<exclusions>
+								<!-- xerces:xmlParserAPIs:jar was replaced with xml-apis:xml-apis:jar -->
+								<exclusion>
+									<groupId>xerces</groupId>
+									<artifactId>xmlParserAPIs</artifactId>
+								</exclusion>
+							</exclusions>
+						</dependency>
+			        </dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
