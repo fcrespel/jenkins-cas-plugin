@@ -112,7 +112,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	@Override
 	protected String getPostLogOutUrl(StaplerRequest req, Authentication auth) {
 		StringBuilder logoutUrlBuilder = new StringBuilder(casServerUrl);
-		logoutUrlBuilder.append("/logout?service=");
+		logoutUrlBuilder.append("logout?service=");
 		try {
 			logoutUrlBuilder.append(URLEncoder.encode(getJenkinsUrl(), "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
