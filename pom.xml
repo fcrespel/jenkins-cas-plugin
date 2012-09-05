@@ -38,6 +38,12 @@ THE SOFTWARE.
 	<name>CAS Plugin</name>
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/CAS+Plugin</url>
 
+	<scm>
+		<connection>scm:git:ssh://github.com/jenkinsci/cas-plugin.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/cas-plugin.git</developerConnection>
+		<url>https://github.com/jenkinsci/cas-plugin</url>
+	</scm>
+
 	<developers>
 		<developer>
 			<id>fcrespel</id>
