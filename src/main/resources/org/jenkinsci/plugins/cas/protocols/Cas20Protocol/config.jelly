@@ -15,5 +15,18 @@
     <f:entry title="${%emailAttribute}" field="emailAttribute">
       <f:textbox default="mail" />
     </f:entry>
+    <f:entry title="${%proxySettings}">
+      <table>
+        <f:optionalBlock title="${%proxyEnabled}" field="proxyEnabled" inline="true">
+          <f:radioBlock title="${%proxyAllowAny}" name="proxyAllowAny" value="true" checked="${instance.proxyAllowAny}" inline="true" />
+          <f:radioBlock title="${%proxyAllowList}" name="proxyAllowAny" value="false" checked="${!instance.proxyAllowAny}" inline="true">
+            <f:description>${%proxyAllowListDescription}</f:description>
+            <f:entry field="proxyAllowList">
+              <f:textarea />
+            </f:entry>
+          </f:radioBlock>
+        </f:optionalBlock>
+      </table>
+    </f:entry>
   </f:advanced>
 </j:jelly>

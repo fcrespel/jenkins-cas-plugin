@@ -32,7 +32,7 @@ THE SOFTWARE.
 	</parent>
 
 	<artifactId>cas-plugin</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	<name>CAS Plugin</name>
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/CAS+Plugin</url>
@@ -49,13 +49,14 @@ THE SOFTWARE.
 			<name>Fabien Crespel</name>
 			<email>fabien@crespel.net</email>
 		</developer>
-		<developer>
-			<id>david_beutel</id>
+	</developers>
+	<contributors>
+		<contributor>
 			<name>J. David Beutel</name>
 			<organization>University of Hawaii ITS/MIS</organization>
 			<email>jbeutel@hawaii.edu</email>
-		</developer>
-	</developers>
+		</contributor>
+	</contributors>
 	
 	<licenses>
 		<license>
