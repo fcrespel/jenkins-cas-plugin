@@ -47,7 +47,9 @@ import org.springframework.web.context.WebApplicationContext;
  */
 public class CasSecurityRealm extends SecurityRealm {
 
+	public static final String DEFAULT_COMMENCE_LOGIN_URL = "securityRealm/commenceLogin";
 	public static final String DEFAULT_FINISH_LOGIN_URL = "securityRealm/finishLogin";
+	public static final String DEFAULT_FAILED_LOGIN_URL = "securityRealm/failedLogin";
 
 	public final String casServerUrl;
 	public final CasProtocol casProtocol;
@@ -73,6 +75,10 @@ public class CasSecurityRealm extends SecurityRealm {
 	
 	public String getFinishLoginUrl() {
 		return DEFAULT_FINISH_LOGIN_URL;
+	}
+	
+	public String getFailedLoginUrl() {
+		return DEFAULT_FAILED_LOGIN_URL;
 	}
 
 
@@ -103,7 +109,7 @@ public class CasSecurityRealm extends SecurityRealm {
      */
     @Override
     public String getLoginUrl() {
-        return "securityRealm/commenceLogin";
+        return DEFAULT_COMMENCE_LOGIN_URL;
     }
 
     /**

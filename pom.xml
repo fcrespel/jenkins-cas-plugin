@@ -153,17 +153,17 @@ THE SOFTWARE.
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-cas-client</artifactId>
 			<version>${spring-security.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.aspectj</groupId>
-                    <artifactId>aspectjrt</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.aspectj</groupId>
-                    <artifactId>aspectjweaver</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+			<exclusions>
+				<exclusion>
+					<groupId>org.aspectj</groupId>
+					<artifactId>aspectjrt</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.aspectj</groupId>
+					<artifactId>aspectjweaver</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>org.opensaml</groupId>
 			<artifactId>opensaml</artifactId>
@@ -180,10 +180,10 @@ THE SOFTWARE.
 		<pluginManagement>
 			<plugins>
 				<plugin>
-			        <groupId>org.jenkins-ci.tools</groupId>
-			        <artifactId>maven-hpi-plugin</artifactId>
-			        <dependencies>
-			        	<!-- Fix for outdated xerces:xercesImpl:jar:2.6.2, which doesn't have a proper DocumentBuilderFactory.setFeature(String, boolean) method required by opensaml -->
+					<groupId>org.jenkins-ci.tools</groupId>
+					<artifactId>maven-hpi-plugin</artifactId>
+					<dependencies>
+						<!-- Fix for outdated xerces:xercesImpl:jar:2.6.2, which doesn't have a proper DocumentBuilderFactory.setFeature(String, boolean) method required by opensaml -->
 						<dependency>
 							<groupId>xerces</groupId>
 							<artifactId>xercesImpl</artifactId>
@@ -201,7 +201,7 @@ THE SOFTWARE.
 								</exclusion>
 							</exclusions>
 						</dependency>
-			        </dependencies>
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>

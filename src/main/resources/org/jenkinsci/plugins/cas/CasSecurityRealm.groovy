@@ -6,14 +6,14 @@ import org.jasig.cas.client.session.HashMapBackedSessionMappingStorage;
 import org.jasig.cas.client.session.SingleSignOutFilter
 import org.jenkinsci.plugins.cas.spring.CasBeanFactory
 import org.jenkinsci.plugins.cas.spring.CasEventListener
+import org.jenkinsci.plugins.cas.spring.security.CasAuthenticationEntryPoint
 import org.jenkinsci.plugins.cas.spring.security.CasAuthenticationFilter
 import org.jenkinsci.plugins.cas.spring.security.CasSingleSignOutFilter
 import org.jenkinsci.plugins.cas.spring.security.CasUserDetailsService
+import org.jenkinsci.plugins.cas.spring.security.SessionUrlAuthenticationSuccessHandler
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.cas.authentication.CasAuthenticationProvider
-import org.springframework.security.cas.web.CasAuthenticationEntryPoint
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 
 
 casEventListener(CasEventListener) {
@@ -53,6 +53,8 @@ casAuthenticationManager(ProviderManager) {
 casAuthenticationEntryPoint(CasAuthenticationEntryPoint) {
 	loginUrl = securityRealm.casServerUrl + "login"
 	serviceProperties = casServiceProperties
+	targetUrlParameter = "from"
+	targetUrlSessionAttribute = SessionUrlAuthenticationSuccessHandler.DEFAULT_TARGET_URL_SESSION_ATTRIBUTE
 }
 
 casSessionMappingStorage(HashMapBackedSessionMappingStorage)
@@ -74,8 +76,8 @@ casFilter(ChainedServletFilter) {
 			filterProcessesUrl = "/" + securityRealm.finishLoginUrl
 			authenticationManager = casAuthenticationManager
 			serviceProperties = casServiceProperties
-			authenticationSuccessHandler = bean(SimpleUrlAuthenticationSuccessHandler, "/")
-			authenticationFailureHandler = bean(SimpleUrlAuthenticationFailureHandler, "/loginError")
+			authenticationFailureHandler = bean(SimpleUrlAuthenticationFailureHandler, "/" + securityRealm.failedLoginUrl)
+			authenticationSuccessHandler = bean(SessionUrlAuthenticationSuccessHandler, "/")
 		}
 	]
 }
