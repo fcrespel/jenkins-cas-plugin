@@ -4,6 +4,7 @@ import hudson.tasks.Mailer;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Collection;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.GrantedAuthorityImpl;
@@ -127,7 +128,11 @@ public class CasEventListener implements ApplicationListener {
 			Map attributes = authToken.getAssertion().getPrincipal().getAttributes();
 			Object attribute = attributes.get(attributeName);
 			if (attribute != null) {
-				return attribute.toString();
+				if (attribute instanceof Collection) {
+					return ((Collection<String>)attribute).iterator().next();
+				} else {
+					return attribute.toString();
+				}
 			}
 		}
 		return null;
