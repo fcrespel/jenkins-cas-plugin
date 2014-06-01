@@ -1,7 +1,7 @@
 Jenkins CAS Plugin
 ==================
 
-This is a [Jenkins](http://jenkins-ci.or) plugin providing authentication with [Jasig CAS](http://jasig.org/cas/).
+This is a [Jenkins](http://jenkins-ci.org) plugin providing authentication with [Jasig CAS](http://jasig.org/cas/).
 
 Installation
 ------------
