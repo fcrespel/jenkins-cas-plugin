@@ -16,7 +16,7 @@
           <div style="margin: 2em; text-align:center; color:red; font-weight:bold">
             ${%Authentication failed. Please try again.}
             <br/>
-            <a href="/${it.loginUrl}">${%Try again}</a>
+            <a href="commenceLogin">${%Try again}</a>
           </div>
           <div align="middle">
             <div style="margin-top:2em; color:gray; width:20em">
