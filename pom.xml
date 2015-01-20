@@ -79,8 +79,8 @@ THE SOFTWARE.
 	</pluginRepositories>
 
 	<properties>
-		<spring.version>2.5</spring.version>
-		<spring-security.version>3.0.7.RELEASE</spring-security.version>
+		<spring.version>3.2.12.RELEASE</spring.version>
+		<spring-security.version>3.2.5.RELEASE</spring-security.version>
 	</properties>
 
 	<dependencyManagement>
@@ -151,7 +151,7 @@ THE SOFTWARE.
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-cas-client</artifactId>
+			<artifactId>spring-security-cas</artifactId>
 			<version>${spring-security.version}</version>
 			<exclusions>
 				<exclusion>

@@ -1,6 +1,8 @@
 package org.jenkinsci.plugins.cas.spring.security;
 
-import java.io.IOException;
+import org.jasig.cas.client.session.SingleSignOutFilter;
+import org.springframework.util.Assert;
+import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -8,10 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.springframework.util.Assert;
-import org.springframework.web.filter.GenericFilterBean;
+import java.io.IOException;
 
 /**
  * CAS Single Sign-Out filter with support for a URL path matching.
@@ -28,7 +27,9 @@ public class CasSingleSignOutFilter extends GenericFilterBean {
 	public void afterPropertiesSet() throws ServletException {
 		Assert.hasLength(filterProcessesUrl, "filterProcessesUrl must be specified");
 		Assert.notNull(singleSignOutFilter, "singleSignOutFilter cannot be null");
-		singleSignOutFilter.init();
+
+		singleSignOutFilter.setIgnoreInitConfiguration(true);
+		singleSignOutFilter.init(null);
 	}
 
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -39,10 +40,10 @@ public class CasSingleSignOutFilter extends GenericFilterBean {
             chain.doFilter(request, response);
             return;
         }
-        
+
         singleSignOutFilter.doFilter(req, res, chain);
 	}
-	
+
 	protected boolean requiresProcessing(HttpServletRequest request, HttpServletResponse response) {
         String uri = request.getRequestURI();
         int pathParamIndex = uri.indexOf(';');

@@ -8,20 +8,7 @@ import hudson.security.ChainedServletFilter;
 import hudson.security.SecurityRealm;
 import hudson.util.FormValidation;
 import hudson.util.spring.BeanBuilder;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
-
 import jenkins.model.Jenkins;
-
 import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
@@ -37,6 +24,16 @@ import org.kohsuke.stapler.StaplerResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.context.WebApplicationContext;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Jasig CAS Single Sign-On security realm.
@@ -212,7 +209,7 @@ public class CasSecurityRealm extends SecurityRealm {
 
             try {
                 URL url = new URL(StringUtils.stripEnd(value, "/") + "/login");
-                String response = CommonUtils.getResponseFromServer(url);
+                String response = CommonUtils.getResponseFromServer(url, "UTF-8");
                 if (!response.contains("username")) {
                     return FormValidation.warning(Messages.CasSecurityRealm_casServerUrl_invalidResponse());
                 }

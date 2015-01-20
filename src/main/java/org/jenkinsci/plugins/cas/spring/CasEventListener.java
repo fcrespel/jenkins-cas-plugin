@@ -1,11 +1,6 @@
 package org.jenkinsci.plugins.cas.spring;
 
 import hudson.tasks.Mailer;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Collection;
-
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.GrantedAuthorityImpl;
 import org.acegisecurity.context.SecurityContextHolder;
@@ -17,6 +12,10 @@ import org.springframework.security.authentication.event.InteractiveAuthenticati
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+
 /**
  * Listener for successful CAS authentication events, that maps Spring Security
  * Authentication to Acegi Security and syncs attributes with the corresponding Jenkins User.
@@ -27,6 +26,7 @@ public class CasEventListener implements ApplicationListener {
 
 	public static final String DEFAULT_FULL_NAME_ATTRIBUTE = "cn";
 	public static final String DEFAULT_EMAIL_ATTRIBUTE = "mail";
+	public static final String CAS_NO_PASSWORD = "NO_PASSWORD";
 
 	private String fullNameAttribute = DEFAULT_FULL_NAME_ATTRIBUTE;
 	private String emailAttribute = DEFAULT_EMAIL_ATTRIBUTE;
@@ -71,7 +71,7 @@ public class CasEventListener implements ApplicationListener {
 
 		// Map user
 		org.springframework.security.core.userdetails.User sourceUser = (org.springframework.security.core.userdetails.User) casToken.getUserDetails();
-		User user = new User(sourceUser.getUsername(), sourceUser.getPassword(), sourceUser.isEnabled(), sourceUser.isAccountNonExpired(), sourceUser.isCredentialsNonExpired(), sourceUser.isAccountNonLocked(), authorities);
+		User user = new User(sourceUser.getUsername(), CAS_NO_PASSWORD, sourceUser.isEnabled(), sourceUser.isAccountNonExpired(), sourceUser.isCredentialsNonExpired(), sourceUser.isAccountNonLocked(), authorities);
 
 		// Build a CasAuthentication object
 		CasAuthentication authentication = new CasAuthentication(casToken.getKeyHash(), user, casToken.getCredentials(), authorities, user, casToken.getAssertion());
