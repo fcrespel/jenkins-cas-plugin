@@ -79,8 +79,8 @@ THE SOFTWARE.
 	</pluginRepositories>
 
 	<properties>
-		<spring.version>3.2.12.RELEASE</spring.version>
-		<spring-security.version>3.2.5.RELEASE</spring-security.version>
+		<spring.version>2.5</spring.version>
+		<spring-security.version>3.2.7.RELEASE</spring-security.version>
 	</properties>
 
 	<dependencyManagement>
@@ -101,6 +101,12 @@ THE SOFTWARE.
 				<groupId>commons-collections</groupId>
 				<artifactId>commons-collections</artifactId>
 				<version>3.2</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>commons-httpclient</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>3.1</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -162,17 +168,11 @@ THE SOFTWARE.
 					<groupId>org.aspectj</groupId>
 					<artifactId>aspectjweaver</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>bcprov-jdk15</artifactId>
+					<groupId>org.bouncycastle</groupId>
+				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.opensaml</groupId>
-			<artifactId>opensaml</artifactId>
-			<version>1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.santuario</groupId>
-			<artifactId>xmlsec</artifactId>
-			<version>1.5.2</version>
 		</dependency>
 	</dependencies>
 
