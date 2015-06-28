@@ -31,7 +31,9 @@ casServiceProperties(casBeanFactory: "createServiceProperties") {
 	service = securityRealm.jenkinsUrl + securityRealm.finishLoginUrl
 }
 
-casTicketValidator(casBeanFactory: "createTicketValidator")
+casTicketValidator(casBeanFactory: "createTicketValidator") {
+	renew = securityRealm.forceRenewal
+}
 
 casAuthenticationUserDetailsService(CasUserDetailsService) {
 	attributes = casProtocol.authoritiesAttributes
