@@ -4,9 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.jasig.cas.client.util.CommonUtils;
+import org.jenkinsci.plugins.cas.CasSecurityRealm;
+
 /**
  * CAS authentication entry point that will save a target URL request parameter
- * into a session attribute before redirecting.
+ * into a session attribute before redirecting. Additionally, the service URL
+ * will be made absolute by adding the Jenkins root URL if necessary.
  * 
  * @author Fabien Crespel <fabien@crespel.net>
  */
@@ -24,6 +28,12 @@ public class CasAuthenticationEntryPoint extends org.springframework.security.ca
 				session.setAttribute(targetUrlSessionAttribute, targetUrl);
 			}
 		}
+	}
+
+	@Override
+	protected String createServiceUrl(HttpServletRequest request, HttpServletResponse response) {
+		String serviceUrl = CasSecurityRealm.getServiceUrl(request, getServiceProperties());
+		return CommonUtils.constructServiceUrl(null, response, serviceUrl, null, getServiceProperties().getArtifactParameter(), getEncodeServiceUrlWithSessionId());
 	}
 
 	/**

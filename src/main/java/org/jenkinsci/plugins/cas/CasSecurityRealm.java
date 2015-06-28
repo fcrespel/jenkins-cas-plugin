@@ -9,6 +9,7 @@ import hudson.security.SecurityRealm;
 import hudson.util.FormValidation;
 import hudson.util.spring.BeanBuilder;
 import jenkins.model.Jenkins;
+
 import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
@@ -21,14 +22,18 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.util.UrlUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -66,16 +71,32 @@ public class CasSecurityRealm extends SecurityRealm {
 
 	//~ Public getters =================================================================================================
 
-	public String getJenkinsUrl() {
+	public static String getJenkinsUrl() {
 		return Jenkins.getInstance().getRootUrl();
 	}
 	
-	public String getFinishLoginUrl() {
+	public static String getJenkinsUrl(HttpServletRequest req) {
+		String jenkinsUrl = getJenkinsUrl();
+		if (jenkinsUrl == null) {
+			jenkinsUrl = UrlUtils.buildFullRequestUrl(req.getScheme(), req.getServerName(), req.getServerPort(), req.getContextPath(), null) + "/";
+		}
+		return jenkinsUrl;
+	}
+	
+	public static String getFinishLoginUrl() {
 		return DEFAULT_FINISH_LOGIN_URL;
 	}
 	
-	public String getFailedLoginUrl() {
+	public static String getFailedLoginUrl() {
 		return DEFAULT_FAILED_LOGIN_URL;
+	}
+	
+	public static String getServiceUrl(HttpServletRequest req, ServiceProperties serviceProperties) {
+		String serviceUrl = serviceProperties.getService(); 
+		if (serviceUrl != null && !serviceUrl.startsWith("http")) {
+			serviceUrl = getJenkinsUrl(req) + serviceUrl;
+		}
+		return serviceUrl;
 	}
 
 

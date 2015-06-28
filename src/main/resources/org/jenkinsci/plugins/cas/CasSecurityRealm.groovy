@@ -10,6 +10,7 @@ import org.jenkinsci.plugins.cas.spring.security.CasAuthenticationEntryPoint
 import org.jenkinsci.plugins.cas.spring.security.CasAuthenticationFilter
 import org.jenkinsci.plugins.cas.spring.security.CasSingleSignOutFilter
 import org.jenkinsci.plugins.cas.spring.security.CasUserDetailsService
+import org.jenkinsci.plugins.cas.spring.security.DynamicServiceAuthenticationDetailsSource
 import org.jenkinsci.plugins.cas.spring.security.SessionUrlAuthenticationSuccessHandler
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.cas.authentication.CasAuthenticationProvider
@@ -28,7 +29,7 @@ casBeanFactory(CasBeanFactory) {
 
 casServiceProperties(casBeanFactory: "createServiceProperties") {
 	sendRenew = securityRealm.forceRenewal
-	service = securityRealm.jenkinsUrl + securityRealm.finishLoginUrl
+	service = securityRealm.finishLoginUrl
 }
 
 casTicketValidator(casBeanFactory: "createTicketValidator") {
@@ -44,7 +45,6 @@ casAuthenticationUserDetailsService(CasUserDetailsService) {
 casAuthenticationManager(ProviderManager) {
 	providers = [
 		bean(CasAuthenticationProvider) {
-			serviceProperties = casServiceProperties
 			ticketValidator = casTicketValidator
 			authenticationUserDetailsService = casAuthenticationUserDetailsService
 			key = "cas_auth_provider"
@@ -58,6 +58,8 @@ casAuthenticationEntryPoint(CasAuthenticationEntryPoint) {
 	targetUrlParameter = "from"
 	targetUrlSessionAttribute = SessionUrlAuthenticationSuccessHandler.DEFAULT_TARGET_URL_SESSION_ATTRIBUTE
 }
+
+casAuthenticationDetailsSource(DynamicServiceAuthenticationDetailsSource, casServiceProperties)
 
 casSessionMappingStorage(HashMapBackedSessionMappingStorage)
 
@@ -77,6 +79,7 @@ casFilter(ChainedServletFilter) {
 		bean(CasAuthenticationFilter) {
 			filterProcessesUrl = "/" + securityRealm.finishLoginUrl
 			authenticationManager = casAuthenticationManager
+			authenticationDetailsSource = casAuthenticationDetailsSource
 			serviceProperties = casServiceProperties
 			authenticationFailureHandler = bean(SimpleUrlAuthenticationFailureHandler, "/" + securityRealm.failedLoginUrl)
 			authenticationSuccessHandler = bean(SessionUrlAuthenticationSuccessHandler, "/")
