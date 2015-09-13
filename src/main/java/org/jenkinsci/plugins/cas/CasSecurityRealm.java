@@ -41,9 +41,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
- * Jasig CAS Single Sign-On security realm.
+ * CAS Single Sign-On security realm.
  * 
- * @see http://www.jasig.org/cas
+ * @see https://www.apereo.org/projects/cas
  * @author Fabien Crespel <fabien@crespel.net>
  * @author J. David Beutel <jbeutel@hawaii.edu>
  */
