@@ -73,6 +73,7 @@ casFilter(ChainedServletFilter) {
 			filterProcessesUrl = "/" + securityRealm.finishLoginUrl
 			singleSignOutFilter = bean(SingleSignOutFilter) {
 				artifactParameterName = casProtocol.artifactParameter
+				casServerUrlPrefix = securityRealm.casServerUrl
 				sessionMappingStorage = casSessionMappingStorage
 			}
 		},
