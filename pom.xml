@@ -28,7 +28,7 @@ THE SOFTWARE.
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.470</version>
+        <version>1.609.2</version>
 	</parent>
 
 	<artifactId>cas-plugin</artifactId>
@@ -158,6 +158,11 @@ THE SOFTWARE.
 
 	<dependencies>
 		<dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>mailer</artifactId>
+            <version>1.16</version>
+        </dependency>
+        <dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-cas</artifactId>
 			<version>${spring-security.version}</version>

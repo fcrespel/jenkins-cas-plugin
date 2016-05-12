@@ -14,6 +14,7 @@ import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.BadCredentialsException;
+import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.session.SessionMappingStorage;
@@ -57,7 +58,8 @@ public class CasSecurityRealm extends SecurityRealm {
 	public final CasProtocol casProtocol;
 	public final Boolean forceRenewal;
 	public final Boolean enableSingleSignOut;
-
+    
+    private transient CasRestAuthenticator casRestAuthenticator;
 	private transient WebApplicationContext applicationContext;
 
 	@DataBoundConstructor
@@ -144,19 +146,31 @@ public class CasSecurityRealm extends SecurityRealm {
 		}
 		return logoutUrlBuilder.toString();
 	}
-
+    
+    private CasRestAuthenticator getCasRestAuthenticator(){
+        if (casRestAuthenticator == null){
+            casRestAuthenticator = new CasRestAuthenticator(casProtocol, casServerUrl, getJenkinsUrl());
+        }
+        return casRestAuthenticator;
+    }
+    
     /**
-     * Build a no-op authentication manager as everything is handled by a
-     * separate CAS filter chain.
+     * Build a authentication manager which uses the CAS rest api for username and password based authentication against 
+     * the rest api. Browser authentication is handled by the CAS filter chain.
      */
     @Override
     public SecurityComponents createSecurityComponents() {
         return new SecurityComponents(
             new AuthenticationManager() {
+                @Override
                 public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                    if (authentication instanceof AnonymousAuthenticationToken)
+                    if (authentication instanceof AnonymousAuthenticationToken){
                         return authentication;
-                    throw new BadCredentialsException("Unexpected authentication type: " + authentication);
+                    } else if (authentication instanceof UsernamePasswordAuthenticationToken){
+                        return getCasRestAuthenticator().authenticate((UsernamePasswordAuthenticationToken) authentication);
+                    } else {
+                        throw new BadCredentialsException("Unexpected authentication type: " + authentication);
+                    }
                 }
             }
         );
