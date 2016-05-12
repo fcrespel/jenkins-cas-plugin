@@ -57,16 +57,18 @@ public class CasSecurityRealm extends SecurityRealm {
 	public final String casServerUrl;
 	public final CasProtocol casProtocol;
 	public final Boolean forceRenewal;
+    public final Boolean enableRestApi;
 	public final Boolean enableSingleSignOut;
     
     private transient CasRestAuthenticator casRestAuthenticator;
 	private transient WebApplicationContext applicationContext;
 
 	@DataBoundConstructor
-	public CasSecurityRealm(String casServerUrl, CasProtocol casProtocol, Boolean forceRenewal, Boolean enableSingleSignOut) {
+	public CasSecurityRealm(String casServerUrl, CasProtocol casProtocol, Boolean forceRenewal, Boolean enableRestApi, Boolean enableSingleSignOut) {
 		this.casServerUrl = StringUtils.stripEnd(casServerUrl, "/") + "/";
 		this.casProtocol = casProtocol;
 		this.forceRenewal = forceRenewal;
+        this.enableRestApi = enableRestApi;
 		this.enableSingleSignOut = enableSingleSignOut;
 	}
 
@@ -154,6 +156,10 @@ public class CasSecurityRealm extends SecurityRealm {
         return casRestAuthenticator;
     }
     
+    private boolean isRestApiEnabled(){
+        return Boolean.TRUE.equals(enableRestApi);
+    }
+    
     /**
      * Build a authentication manager which uses the CAS rest api for username and password based authentication against 
      * the rest api. Browser authentication is handled by the CAS filter chain.
@@ -166,7 +172,7 @@ public class CasSecurityRealm extends SecurityRealm {
                 public Authentication authenticate(Authentication authentication) throws AuthenticationException {
                     if (authentication instanceof AnonymousAuthenticationToken){
                         return authentication;
-                    } else if (authentication instanceof UsernamePasswordAuthenticationToken){
+                    } else if ((authentication instanceof UsernamePasswordAuthenticationToken) && isRestApiEnabled()){
                         return getCasRestAuthenticator().authenticate((UsernamePasswordAuthenticationToken) authentication);
                     } else {
                         throw new BadCredentialsException("Unexpected authentication type: " + authentication);

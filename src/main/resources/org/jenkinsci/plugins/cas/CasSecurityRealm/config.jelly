@@ -7,6 +7,9 @@
   <f:entry title="${%forceRenewal}" field="forceRenewal">
     <f:checkbox />
   </f:entry>
+  <f:entry title="${%enableRestApi}" field="enableRestApi">
+    <f:checkbox />
+  </f:entry>
   <f:entry title="${%enableSingleSignOut}" field="enableSingleSignOut">
     <f:checkbox default="true" />
   </f:entry>
