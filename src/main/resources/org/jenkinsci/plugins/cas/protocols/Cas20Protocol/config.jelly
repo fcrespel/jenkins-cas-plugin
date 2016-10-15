@@ -2,7 +2,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <f:block>
     <table>
-      <f:description>${%description("http://jasig.github.io/cas/development/protocol/CAS-Protocol-Specification.html", "http://jasig.github.io/cas/development/integration/Attribute-Release.html")}</f:description>
+      <f:description>${%description("https://apereo.github.io/cas/4.2.x/protocol/CAS-Protocol-Specification.html", "https://apereo.github.io/cas/4.2.x/integration/Attribute-Release.html")}</f:description>
     </table>
   </f:block>
   <f:advanced>
