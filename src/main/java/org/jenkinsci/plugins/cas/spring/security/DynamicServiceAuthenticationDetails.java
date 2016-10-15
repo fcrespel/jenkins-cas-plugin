@@ -26,32 +26,32 @@ public class DynamicServiceAuthenticationDetails extends WebAuthenticationDetail
 		return serviceUrl;
 	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + serviceUrl.hashCode();
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + serviceUrl.hashCode();
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!super.equals(obj) || !(obj instanceof DynamicServiceAuthenticationDetails)) {
-            return false;
-        }
-        ServiceAuthenticationDetails that = (ServiceAuthenticationDetails) obj;
-        return serviceUrl.equals(that.getServiceUrl());
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj) || !(obj instanceof DynamicServiceAuthenticationDetails)) {
+			return false;
+		}
+		ServiceAuthenticationDetails that = (ServiceAuthenticationDetails) obj;
+		return serviceUrl.equals(that.getServiceUrl());
+	}
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString()).append("; ");
-        sb.append("ServiceUrl: ").append(serviceUrl);
-        return sb.toString();
-    }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(super.toString()).append("; ");
+		sb.append("ServiceUrl: ").append(serviceUrl);
+		return sb.toString();
+	}
 
 }

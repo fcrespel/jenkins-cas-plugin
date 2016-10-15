@@ -34,31 +34,31 @@ public class CasSingleSignOutFilter extends GenericFilterBean {
 
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
+		HttpServletResponse response = (HttpServletResponse) res;
 
-        if (!enabled || !requiresProcessing(request, response)) {
-            chain.doFilter(request, response);
-            return;
-        }
+		if (!enabled || !requiresProcessing(request, response)) {
+			chain.doFilter(request, response);
+			return;
+		}
 
-        singleSignOutFilter.doFilter(req, res, chain);
+		singleSignOutFilter.doFilter(req, res, chain);
 	}
 
 	protected boolean requiresProcessing(HttpServletRequest request, HttpServletResponse response) {
-        String uri = request.getRequestURI();
-        int pathParamIndex = uri.indexOf(';');
+		String uri = request.getRequestURI();
+		int pathParamIndex = uri.indexOf(';');
 
-        if (pathParamIndex > 0) {
-            // strip everything after the first semi-colon
-            uri = uri.substring(0, pathParamIndex);
-        }
+		if (pathParamIndex > 0) {
+			// strip everything after the first semi-colon
+			uri = uri.substring(0, pathParamIndex);
+		}
 
-        if ("".equals(request.getContextPath())) {
-            return uri.endsWith(filterProcessesUrl);
-        }
+		if ("".equals(request.getContextPath())) {
+			return uri.endsWith(filterProcessesUrl);
+		}
 
-        return uri.endsWith(request.getContextPath() + filterProcessesUrl);
-    }
+		return uri.endsWith(request.getContextPath() + filterProcessesUrl);
+	}
 
 	/**
 	 * @return the enabled

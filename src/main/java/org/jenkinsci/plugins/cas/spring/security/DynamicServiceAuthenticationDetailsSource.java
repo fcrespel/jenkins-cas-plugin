@@ -15,11 +15,11 @@ import org.springframework.security.cas.web.authentication.ServiceAuthentication
 public class DynamicServiceAuthenticationDetailsSource implements AuthenticationDetailsSource<HttpServletRequest, ServiceAuthenticationDetails> {
 
 	private ServiceProperties serviceProperties;
-	
+
 	public DynamicServiceAuthenticationDetailsSource(ServiceProperties serviceProperties) {
 		this.serviceProperties = serviceProperties;
 	}
-	
+
 	public ServiceAuthenticationDetails buildDetails(HttpServletRequest context) {
 		return new DynamicServiceAuthenticationDetails(context, serviceProperties);
 	}

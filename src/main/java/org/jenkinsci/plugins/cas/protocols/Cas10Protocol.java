@@ -33,7 +33,7 @@ public class Cas10Protocol extends CasProtocol {
 		this.rolesValidationScript = Util.fixEmptyAndTrim(rolesValidationScript);
 		this.testValidationResponse = Util.fixEmpty(testValidationResponse);
 	}
-	
+
 	@Override
 	public String getAuthoritiesAttribute() {
 		return Cas10RoleParsingTicketValidator.DEFAULT_ROLE_ATTRIBUTE;
@@ -55,22 +55,21 @@ public class Cas10Protocol extends CasProtocol {
 
 		@SuppressWarnings("rawtypes")
 		public FormValidation doTestScript(
-                @QueryParameter("rolesValidationScript") final String rolesValidationScript,
-                @QueryParameter("testValidationResponse") final String testValidationResponse) {
-            try {
-                Script script = new GroovyShell().parse(rolesValidationScript);
-                Collection roles = Cas10RoleParsingTicketValidator.parseRolesFromValidationResponse(script, testValidationResponse);
-                if (roles == null) {
-                    return FormValidation.error(Messages.Cas10Protocol_rolesValidationScript_noResult());
-                }
-                return FormValidation.ok(Messages.Cas10Protocol_rolesValidationScript_result() + ": " + roles);
-            }
-            catch (CompilationFailedException e) {
-                return FormValidation.error(Messages.Cas10Protocol_rolesValidationScript_compilationError() + ": " + e);
-            } catch (ClassCastException e) {
-                return FormValidation.error(Messages.Cas10Protocol_rolesValidationScript_returnTypeError() + ": " + e);
-            }
-        }
+				@QueryParameter("rolesValidationScript") final String rolesValidationScript,
+				@QueryParameter("testValidationResponse") final String testValidationResponse) {
+			try {
+				Script script = new GroovyShell().parse(rolesValidationScript);
+				Collection roles = Cas10RoleParsingTicketValidator.parseRolesFromValidationResponse(script, testValidationResponse);
+				if (roles == null) {
+					return FormValidation.error(Messages.Cas10Protocol_rolesValidationScript_noResult());
+				}
+				return FormValidation.ok(Messages.Cas10Protocol_rolesValidationScript_result() + ": " + roles);
+			} catch (CompilationFailedException e) {
+				return FormValidation.error(Messages.Cas10Protocol_rolesValidationScript_compilationError() + ": " + e);
+			} catch (ClassCastException e) {
+				return FormValidation.error(Messages.Cas10Protocol_rolesValidationScript_returnTypeError() + ": " + e);
+			}
+		}
 	}
 
 }

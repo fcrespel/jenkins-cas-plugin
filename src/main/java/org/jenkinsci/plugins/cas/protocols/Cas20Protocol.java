@@ -21,11 +21,11 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Fabien Crespel <fabien@crespel.net>
  */
 public class Cas20Protocol extends CasProtocol {
-	
+
 	public final Boolean proxyEnabled;
 	public final Boolean proxyAllowAny;
 	public final String proxyAllowList;
-	
+
 	@Deprecated
 	public Cas20Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute) {
 		this(authoritiesAttribute, fullNameAttribute, emailAttribute, false, true, null);

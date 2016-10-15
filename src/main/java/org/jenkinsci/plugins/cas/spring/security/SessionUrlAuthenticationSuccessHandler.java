@@ -20,16 +20,16 @@ public class SessionUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticat
 	private String targetUrlSessionAttribute = DEFAULT_TARGET_URL_SESSION_ATTRIBUTE;
 
 	/**
-     * Constructor which sets the <tt>defaultTargetUrl</tt> property of the base class.
-     * @param defaultTargetUrl the URL to which the user should be redirected on successful authentication.
-     */
+	 * Constructor which sets the <tt>defaultTargetUrl</tt> property of the base class.
+	 * @param defaultTargetUrl the URL to which the user should be redirected on successful authentication.
+	 */
 	public SessionUrlAuthenticationSuccessHandler(String defaultTargetUrl) {
 		super(defaultTargetUrl);
 	}
 
 	/**
-     * Builds the target URL according to the logic defined in the main class Javadoc.
-     */
+	 * Builds the target URL according to the logic defined in the main class Javadoc.
+	 */
 	protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
 		String targetUrl = null;
 		HttpSession session = request.getSession(false);
@@ -42,15 +42,15 @@ public class SessionUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticat
 			return super.determineTargetUrl(request, response);
 		}
 
-        logger.debug("Found targetUrlSessionAttribute in request: " + targetUrl);
-		
-		// URL returned from determineTargetUrl() is resolved against the context path,
-        // whereas the "from" URL is resolved against the top of the website, so adjust this.
-        if (targetUrl.startsWith(request.getContextPath()))
-            return targetUrl.substring(request.getContextPath().length());
+		logger.debug("Found targetUrlSessionAttribute in request: " + targetUrl);
 
-        return targetUrl;
-    }
+		// URL returned from determineTargetUrl() is resolved against the context path,
+		// whereas the "from" URL is resolved against the top of the website, so adjust this.
+		if (targetUrl.startsWith(request.getContextPath()))
+			return targetUrl.substring(request.getContextPath().length());
+
+		return targetUrl;
+	}
 
 	/**
 	 * @return the targetUrlSessionAttribute

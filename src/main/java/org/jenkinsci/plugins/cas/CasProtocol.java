@@ -81,10 +81,10 @@ public abstract class CasProtocol extends AbstractDescribableImpl<CasProtocol> i
 	public abstract TicketValidator createTicketValidator(String casServerUrl);
 
 	/**
-     * Returns all the registered {@link CasProtocol} descriptors.
-     */
-    public static DescriptorExtensionList<CasProtocol,Descriptor<CasProtocol>> all() {
-        return Jenkins.getInstance().<CasProtocol,Descriptor<CasProtocol>>getDescriptorList(CasProtocol.class);
-    }
+	 * Returns all the registered {@link CasProtocol} descriptors.
+	 */
+	public static DescriptorExtensionList<CasProtocol, Descriptor<CasProtocol>> all() {
+		return Jenkins.getInstance().<CasProtocol, Descriptor<CasProtocol>> getDescriptorList(CasProtocol.class);
+	}
 
 }

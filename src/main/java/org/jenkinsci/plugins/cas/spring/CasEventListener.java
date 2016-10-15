@@ -37,7 +37,7 @@ public class CasEventListener implements ApplicationListener {
 	 */
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof InteractiveAuthenticationSuccessEvent) {
-			onSuccessfulAuthentication(((InteractiveAuthenticationSuccessEvent)event).getAuthentication());
+			onSuccessfulAuthentication(((InteractiveAuthenticationSuccessEvent) event).getAuthentication());
 		}
 	}
 
@@ -129,7 +129,7 @@ public class CasEventListener implements ApplicationListener {
 			Object attribute = attributes.get(attributeName);
 			if (attribute != null) {
 				if (attribute instanceof Collection) {
-					return ((Collection<String>)attribute).iterator().next();
+					return ((Collection<String>) attribute).iterator().next();
 				} else {
 					return attribute.toString();
 				}

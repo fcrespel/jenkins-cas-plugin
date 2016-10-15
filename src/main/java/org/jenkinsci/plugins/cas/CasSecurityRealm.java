@@ -57,28 +57,42 @@ public class CasSecurityRealm extends SecurityRealm {
 	public final String casServerUrl;
 	public final CasProtocol casProtocol;
 	public final Boolean forceRenewal;
-    public final Boolean enableRestApi;
 	public final Boolean enableSingleSignOut;
-    
-    private transient CasRestAuthenticator casRestAuthenticator;
+	public final Boolean enableRestApi;
+
+	private transient CasRestAuthenticator casRestAuthenticator;
 	private transient WebApplicationContext applicationContext;
 
+	@Deprecated
+	public CasSecurityRealm(String casServerUrl, CasProtocol casProtocol, Boolean forceRenewal, Boolean enableSingleSignOut) {
+		this(casServerUrl, casProtocol, forceRenewal, enableSingleSignOut, false);
+	}
+
 	@DataBoundConstructor
-	public CasSecurityRealm(String casServerUrl, CasProtocol casProtocol, Boolean forceRenewal, Boolean enableRestApi, Boolean enableSingleSignOut) {
+	public CasSecurityRealm(String casServerUrl, CasProtocol casProtocol, Boolean forceRenewal, Boolean enableSingleSignOut, Boolean enableRestApi) {
 		this.casServerUrl = StringUtils.stripEnd(casServerUrl, "/") + "/";
 		this.casProtocol = casProtocol;
 		this.forceRenewal = forceRenewal;
-        this.enableRestApi = enableRestApi;
 		this.enableSingleSignOut = enableSingleSignOut;
+		this.enableRestApi = enableRestApi;
 	}
 
+	// ~ Public getters =================================================================================================
 
-	//~ Public getters =================================================================================================
-
+	/**
+	 * Get the root Jenkins URL configured in global settings.
+	 * @return Jenkins URL
+	 */
 	public static String getJenkinsUrl() {
 		return Jenkins.getInstance().getRootUrl();
 	}
-	
+
+	/**
+	 * Get the root Jenkins URL configured in global settings, or construct it
+	 * from the current HTTP request
+	 * @param req current HTTP request
+	 * @return Jenkins URL
+	 */
 	public static String getJenkinsUrl(HttpServletRequest req) {
 		String jenkinsUrl = getJenkinsUrl();
 		if (jenkinsUrl == null) {
@@ -86,25 +100,32 @@ public class CasSecurityRealm extends SecurityRealm {
 		}
 		return jenkinsUrl;
 	}
-	
+
+	/**
+	 * Get the callback URL after CAS authentication.
+	 * @return finish login URL
+	 */
 	public static String getFinishLoginUrl() {
 		return DEFAULT_FINISH_LOGIN_URL;
 	}
-	
+
+	/**
+	 * Get the URL to redirect to in case of authentication failure.
+	 * @return failed login URL
+	 */
 	public static String getFailedLoginUrl() {
 		return DEFAULT_FAILED_LOGIN_URL;
 	}
-	
+
 	public static String getServiceUrl(HttpServletRequest req, ServiceProperties serviceProperties) {
-		String serviceUrl = serviceProperties.getService(); 
+		String serviceUrl = serviceProperties.getService();
 		if (serviceUrl != null && !serviceUrl.startsWith("http")) {
 			serviceUrl = getJenkinsUrl(req) + serviceUrl;
 		}
 		return serviceUrl;
 	}
 
-
-	//~ Protected methods ==============================================================================================
+	// ~ Protected methods ==============================================================================================
 
 	/**
 	 * Create the Spring application context that will hold CAS filters.
@@ -112,31 +133,49 @@ public class CasSecurityRealm extends SecurityRealm {
 	protected WebApplicationContext getApplicationContext() {
 		if (this.applicationContext == null) {
 			Binding binding = new Binding();
-	        binding.setVariable("securityRealm", this);
-	        binding.setVariable("casProtocol", this.casProtocol);
+			binding.setVariable("securityRealm", this);
+			binding.setVariable("casProtocol", this.casProtocol);
 
-	        BeanBuilder builder = new BeanBuilder(getClass().getClassLoader());
-	        builder.parse(getClass().getClassLoader().getResourceAsStream(getClass().getName().replace('.', '/') + ".groovy"), binding);
+			BeanBuilder builder = new BeanBuilder(getClass().getClassLoader());
+			builder.parse(getClass().getClassLoader().getResourceAsStream(getClass().getName().replace('.', '/') + ".groovy"), binding);
 
-	        this.applicationContext = builder.createApplicationContext();
+			this.applicationContext = builder.createApplicationContext();
 		}
 		return this.applicationContext;
 	}
 
-
-	//~ SecurityRealm implementation ===================================================================================
+	/**
+	 * Get or create the CAS REST client for API authentication.
+	 * @return CAS REST authenticator
+	 */
+	private CasRestAuthenticator getCasRestAuthenticator() {
+		if (casRestAuthenticator == null) {
+			casRestAuthenticator = new CasRestAuthenticator(casProtocol, casServerUrl, getJenkinsUrl());
+		}
+		return casRestAuthenticator;
+	}
 
 	/**
-     * Login begins with our {@link #doCommenceLogin(String)} method.
-     */
-    @Override
-    public String getLoginUrl() {
-        return DEFAULT_COMMENCE_LOGIN_URL;
-    }
+	 * Check if the CAS REST API is enabled.
+	 * @return true if enabled
+	 */
+	private boolean isRestApiEnabled() {
+		return Boolean.TRUE.equals(enableRestApi);
+	}
 
-    /**
-     * Logout redirects to CAS before coming back to Jenkins.
-     */
+	// ~ SecurityRealm implementation ===================================================================================
+
+	/**
+	 * Login begins with our {@link #doCommenceLogin(String)} method.
+	 */
+	@Override
+	public String getLoginUrl() {
+		return DEFAULT_COMMENCE_LOGIN_URL;
+	}
+
+	/**
+	 * Logout redirects to CAS before coming back to Jenkins.
+	 */
 	@Override
 	protected String getPostLogOutUrl(StaplerRequest req, Authentication auth) {
 		StringBuilder logoutUrlBuilder = new StringBuilder(casServerUrl);
@@ -148,46 +187,33 @@ public class CasSecurityRealm extends SecurityRealm {
 		}
 		return logoutUrlBuilder.toString();
 	}
-    
-    private CasRestAuthenticator getCasRestAuthenticator(){
-        if (casRestAuthenticator == null){
-            casRestAuthenticator = new CasRestAuthenticator(casProtocol, casServerUrl, getJenkinsUrl());
-        }
-        return casRestAuthenticator;
-    }
-    
-    private boolean isRestApiEnabled(){
-        return Boolean.TRUE.equals(enableRestApi);
-    }
-    
-    /**
-     * Build a authentication manager which uses the CAS rest api for username and password based authentication against 
-     * the rest api. Browser authentication is handled by the CAS filter chain.
-     */
-    @Override
-    public SecurityComponents createSecurityComponents() {
-        return new SecurityComponents(
-            new AuthenticationManager() {
-                @Override
-                public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                    if (authentication instanceof AnonymousAuthenticationToken){
-                        return authentication;
-                    } else if ((authentication instanceof UsernamePasswordAuthenticationToken) && isRestApiEnabled()){
-                        return getCasRestAuthenticator().authenticate((UsernamePasswordAuthenticationToken) authentication);
-                    } else {
-                        throw new BadCredentialsException("Unexpected authentication type: " + authentication);
-                    }
-                }
-            }
-        );
-    }
 
-    /**
-     * Build the filter that will validate the service ticket returned by CAS.
-     * This filter, defined in the CasSecurityRealm.groovy application context,
-     * will wrap the original filter chain from Jenkins to preserve support for
-     * API token authentication (among other features).
-     */
+	/**
+	 * Build a authentication manager which uses the CAS REST API for username and password based authentication against
+	 * the REST API. Browser authentication is handled by the CAS filter chain.
+	 */
+	@Override
+	public SecurityComponents createSecurityComponents() {
+		return new SecurityComponents(new AuthenticationManager() {
+			@Override
+			public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+				if (authentication instanceof AnonymousAuthenticationToken) {
+					return authentication;
+				} else if ((authentication instanceof UsernamePasswordAuthenticationToken) && isRestApiEnabled()) {
+					return getCasRestAuthenticator().authenticate((UsernamePasswordAuthenticationToken) authentication);
+				} else {
+					throw new BadCredentialsException("Unexpected authentication type: " + authentication);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Build the filter that will validate the service ticket returned by CAS.
+	 * This filter, defined in the CasSecurityRealm.groovy application context,
+	 * will wrap the original filter chain from Jenkins to preserve support for
+	 * API token authentication (among other features).
+	 */
 	@Override
 	public Filter createFilter(FilterConfig filterConfig) {
 		Filter defaultFilter = super.createFilter(filterConfig);
@@ -195,9 +221,8 @@ public class CasSecurityRealm extends SecurityRealm {
 		return new ChainedServletFilter(casFilter, defaultFilter);
 	}
 
+	// ~ Stapler controller actions =====================================================================================
 
-	//~ Stapler controller actions =====================================================================================
-	
 	/**
 	 * Handles the logout processing.
 	 */
@@ -205,26 +230,26 @@ public class CasSecurityRealm extends SecurityRealm {
 	public void doLogout(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
 		// Clear Spring Security context
 		SecurityContextHolder.clearContext();
-		
+
 		// Remove session from CAS single sign-out storage
 		HttpSession session = req.getSession(false);
-        if (session != null) {
-    		SessionMappingStorage sessionMappingStorage = (SessionMappingStorage) getApplicationContext().getBean("casSessionMappingStorage");
-    		sessionMappingStorage.removeBySessionById(session.getId());
-        }
-        
+		if (session != null) {
+			SessionMappingStorage sessionMappingStorage = (SessionMappingStorage) getApplicationContext().getBean("casSessionMappingStorage");
+			sessionMappingStorage.removeBySessionById(session.getId());
+		}
+
 		super.doLogout(req, rsp);
 	}
 
 	/**
-     * The login process starts from here, using the CasAuthenticationEntryPoint
-     * defined in the CasSecurityRealm.groovy application context.
-     */
+	 * The login process starts from here, using the CasAuthenticationEntryPoint
+	 * defined in the CasSecurityRealm.groovy application context.
+	 */
 	public void doCommenceLogin(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
 		AuthenticationEntryPoint entryPoint = (AuthenticationEntryPoint) getApplicationContext().getBean("casAuthenticationEntryPoint");
 		entryPoint.commence(req, rsp, null);
 	}
-	
+
 	/**
 	 * The login process finishes here, although by the time this action is called
 	 * everything has already been taken care of by filters.
@@ -233,8 +258,7 @@ public class CasSecurityRealm extends SecurityRealm {
 		// Nothing to do
 	}
 
-
-	//~ SecurityRealm descriptor =======================================================================================
+	// ~ SecurityRealm descriptor =======================================================================================
 
 	@Extension
 	public static final class DescriptorImpl extends Descriptor<SecurityRealm> {
@@ -244,25 +268,24 @@ public class CasSecurityRealm extends SecurityRealm {
 		}
 
 		public FormValidation doCheckCasServerUrl(@QueryParameter String value) throws IOException, ServletException {
-            value = Util.fixEmptyAndTrim(value);
-            if (value == null)
-                return FormValidation.error(Messages.CasSecurityRealm_casServerUrl_missingUrl());
+			value = Util.fixEmptyAndTrim(value);
+			if (value == null)
+				return FormValidation.error(Messages.CasSecurityRealm_casServerUrl_missingUrl());
 
-            try {
-                URL url = new URL(StringUtils.stripEnd(value, "/") + "/login");
-                String response = CommonUtils.getResponseFromServer(url, "UTF-8");
-                if (!response.contains("username")) {
-                    return FormValidation.warning(Messages.CasSecurityRealm_casServerUrl_invalidResponse());
-                }
-            } catch (MalformedURLException e) {
-                return FormValidation.error(Messages.CasSecurityRealm_casServerUrl_malformedUrl() + ": " + e.getMessage());
-            } catch (RuntimeException e) {
-                return FormValidation.error(Messages.CasSecurityRealm_casServerUrl_cannotGetResponse() + ": "
-                        + (e.getCause() == null ? e : e.getCause()));
-            }
+			try {
+				URL url = new URL(StringUtils.stripEnd(value, "/") + "/login");
+				String response = CommonUtils.getResponseFromServer(url, "UTF-8");
+				if (!response.contains("username")) {
+					return FormValidation.warning(Messages.CasSecurityRealm_casServerUrl_invalidResponse());
+				}
+			} catch (MalformedURLException e) {
+				return FormValidation.error(Messages.CasSecurityRealm_casServerUrl_malformedUrl() + ": " + e.getMessage());
+			} catch (RuntimeException e) {
+				return FormValidation.error(Messages.CasSecurityRealm_casServerUrl_cannotGetResponse() + ": " + (e.getCause() == null ? e : e.getCause()));
+			}
 
-            return FormValidation.ok();
-        }
+			return FormValidation.ok();
+		}
 	}
 
 }
