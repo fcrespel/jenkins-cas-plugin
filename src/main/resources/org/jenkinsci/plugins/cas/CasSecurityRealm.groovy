@@ -7,10 +7,12 @@ import org.jasig.cas.client.session.SingleSignOutHandler
 import org.jenkinsci.plugins.cas.spring.CasBeanFactory
 import org.jenkinsci.plugins.cas.spring.CasEventListener
 import org.jenkinsci.plugins.cas.spring.security.CasAuthenticationEntryPoint
+import org.jenkinsci.plugins.cas.spring.security.CasRestAuthenticator
 import org.jenkinsci.plugins.cas.spring.security.CasSingleSignOutFilter
 import org.jenkinsci.plugins.cas.spring.security.CasUserDetailsService
 import org.jenkinsci.plugins.cas.spring.security.DynamicServiceAuthenticationDetailsSource
 import org.jenkinsci.plugins.cas.spring.security.SessionUrlAuthenticationSuccessHandler
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.cas.authentication.CasAuthenticationProvider
 import org.springframework.security.cas.web.CasAuthenticationFilter
@@ -50,6 +52,7 @@ casAuthenticationManager(ProviderManager) {
 			key = "cas_auth_provider"
 		}
 	]
+	authenticationEventPublisher = bean(DefaultAuthenticationEventPublisher)
 }
 
 casAuthenticationEntryPoint(CasAuthenticationEntryPoint) {
@@ -86,4 +89,10 @@ casFilter(ChainedServletFilter) {
 			authenticationSuccessHandler = bean(SessionUrlAuthenticationSuccessHandler, "/")
 		}
 	]
+}
+
+casRestAuthenticator(CasRestAuthenticator) {
+	casServerUrl = securityRealm.casServerUrl
+	authenticationManager = casAuthenticationManager
+	authenticationDetailsSource = casAuthenticationDetailsSource
 }

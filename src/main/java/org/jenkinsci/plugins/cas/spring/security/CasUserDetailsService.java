@@ -20,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public final class CasUserDetailsService extends AbstractCasAssertionUserDetailsService {
 
-	private static final String NON_EXISTENT_PASSWORD_VALUE = "NO_PASSWORD";
+	public static final String NON_EXISTENT_PASSWORD_VALUE = "NO_PASSWORD";
 
 	private String[] attributes;
 	private boolean convertToUpperCase = true;

@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.jenkinsci.plugins.cas.CasSecurityRealm;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 /**
  * {@code ServiceAuthenticationDetails} implementation that will convert a relative
@@ -13,12 +12,13 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
  *
  * @author Fabien Crespel <fabien@crespel.net>
  */
-public class DynamicServiceAuthenticationDetails extends WebAuthenticationDetails implements ServiceAuthenticationDetails {
+public class DynamicServiceAuthenticationDetails implements ServiceAuthenticationDetails {
+
+	private static final long serialVersionUID = 1L;
 
 	private String serviceUrl;
 
 	public DynamicServiceAuthenticationDetails(HttpServletRequest request, ServiceProperties serviceProperties) {
-		super(request);
 		this.serviceUrl = CasSecurityRealm.getServiceUrl(request, serviceProperties);
 	}
 
@@ -49,7 +49,6 @@ public class DynamicServiceAuthenticationDetails extends WebAuthenticationDetail
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(super.toString()).append("; ");
 		sb.append("ServiceUrl: ").append(serviceUrl);
 		return sb.toString();
 	}

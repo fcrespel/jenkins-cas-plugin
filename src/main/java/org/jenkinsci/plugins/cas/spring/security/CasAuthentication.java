@@ -3,10 +3,13 @@ package org.jenkinsci.plugins.cas.spring.security;
 import java.io.Serializable;
 
 import org.acegisecurity.GrantedAuthority;
+import org.acegisecurity.GrantedAuthorityImpl;
 import org.acegisecurity.providers.AbstractAuthenticationToken;
+import org.acegisecurity.userdetails.User;
 import org.acegisecurity.userdetails.UserDetails;
 import org.jasig.cas.client.validation.Assertion;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
+import org.springframework.security.cas.authentication.CasAuthenticationToken;
 
 /**
  * Represents a successful CAS <code>Authentication</code>.
@@ -81,6 +84,24 @@ public class CasAuthentication extends AbstractAuthenticationToken implements Se
 		this.userDetails = userDetails;
 		this.assertion = assertion;
 		setAuthenticated(true);
+	}
+
+	//~ Factories ======================================================================================================
+
+	public static CasAuthentication newInstance(CasAuthenticationToken casToken) {
+		// Map granted authorities
+		GrantedAuthority[] authorities = new GrantedAuthority[casToken.getAuthorities().size()];
+		int i = 0;
+		for (org.springframework.security.core.GrantedAuthority authority : casToken.getAuthorities()) {
+			authorities[i++] = new GrantedAuthorityImpl(authority.getAuthority());
+		}
+
+		// Map user
+		org.springframework.security.core.userdetails.User sourceUser = (org.springframework.security.core.userdetails.User) casToken.getUserDetails();
+		User user = new User(sourceUser.getUsername(), CasUserDetailsService.NON_EXISTENT_PASSWORD_VALUE, sourceUser.isEnabled(), sourceUser.isAccountNonExpired(), sourceUser.isCredentialsNonExpired(), sourceUser.isAccountNonLocked(), authorities);
+
+		// Build a CasAuthentication object
+		return new CasAuthentication(casToken.getKeyHash(), user, casToken.getCredentials(), authorities, user, casToken.getAssertion());
 	}
 
 	//~ Methods ========================================================================================================

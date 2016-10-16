@@ -1,14 +1,16 @@
 package org.jenkinsci.plugins.cas;
 
-import groovy.lang.Binding;
-import hudson.Extension;
-import hudson.Util;
-import hudson.model.Descriptor;
-import hudson.security.ChainedServletFilter;
-import hudson.security.SecurityRealm;
-import hudson.util.FormValidation;
-import hudson.util.spring.BeanBuilder;
-import jenkins.model.Jenkins;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationException;
@@ -19,6 +21,8 @@ import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.session.SessionMappingStorage;
 import org.jasig.cas.client.util.CommonUtils;
+import org.jenkinsci.plugins.cas.spring.security.AcegiAuthenticationManager;
+import org.jenkinsci.plugins.cas.spring.security.CasRestAuthenticator;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -29,17 +33,16 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
+import groovy.lang.Binding;
+import hudson.Extension;
+import hudson.Util;
+import hudson.model.Descriptor;
+import hudson.security.ChainedServletFilter;
+import hudson.security.SecurityRealm;
+import hudson.security.SecurityRealm.SecurityComponents;
+import hudson.util.FormValidation;
+import hudson.util.spring.BeanBuilder;
+import jenkins.model.Jenkins;
 
 /**
  * CAS Single Sign-On security realm.
@@ -89,13 +92,13 @@ public class CasSecurityRealm extends SecurityRealm {
 
 	/**
 	 * Get the root Jenkins URL configured in global settings, or construct it
-	 * from the current HTTP request
+	 * from the current HTTP request.
 	 * @param req current HTTP request
 	 * @return Jenkins URL
 	 */
 	public static String getJenkinsUrl(HttpServletRequest req) {
 		String jenkinsUrl = getJenkinsUrl();
-		if (jenkinsUrl == null) {
+		if (jenkinsUrl == null && req != null) {
 			jenkinsUrl = UrlUtils.buildFullRequestUrl(req.getScheme(), req.getServerName(), req.getServerPort(), req.getContextPath(), null) + "/";
 		}
 		return jenkinsUrl;
@@ -155,10 +158,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * @return CAS REST authenticator
 	 */
 	protected CasRestAuthenticator getCasRestAuthenticator() {
-		if (casRestAuthenticator == null) {
-			casRestAuthenticator = new CasRestAuthenticator(casProtocol, casServerUrl, getJenkinsUrl());
-		}
-		return casRestAuthenticator;
+		return (CasRestAuthenticator) getApplicationContext().getBean("casRestAuthenticator");
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class CasSecurityRealm extends SecurityRealm {
 				if (authentication instanceof AnonymousAuthenticationToken) {
 					return authentication;
 				} else if ((authentication instanceof UsernamePasswordAuthenticationToken) && isRestApiEnabled()) {
-					return getCasRestAuthenticator().authenticate((UsernamePasswordAuthenticationToken) authentication);
+					return new AcegiAuthenticationManager(getCasRestAuthenticator()).authenticate(authentication);
 				} else {
 					throw new BadCredentialsException("Unexpected authentication type: " + authentication);
 				}

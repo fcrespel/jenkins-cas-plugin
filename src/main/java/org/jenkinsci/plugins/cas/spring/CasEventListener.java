@@ -1,20 +1,19 @@
 package org.jenkinsci.plugins.cas.spring;
 
-import hudson.tasks.Mailer;
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.GrantedAuthorityImpl;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+
 import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.userdetails.User;
 import org.jenkinsci.plugins.cas.spring.security.CasAuthentication;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
+import hudson.tasks.Mailer;
 
 /**
  * Listener for successful CAS authentication events, that maps Spring Security
@@ -26,7 +25,6 @@ public class CasEventListener implements ApplicationListener {
 
 	public static final String DEFAULT_FULL_NAME_ATTRIBUTE = "cn";
 	public static final String DEFAULT_EMAIL_ATTRIBUTE = "mail";
-	public static final String CAS_NO_PASSWORD = "NO_PASSWORD";
 
 	private String fullNameAttribute = DEFAULT_FULL_NAME_ATTRIBUTE;
 	private String emailAttribute = DEFAULT_EMAIL_ATTRIBUTE;
@@ -36,8 +34,10 @@ public class CasEventListener implements ApplicationListener {
 	 * @param event the event to respond to
 	 */
 	public void onApplicationEvent(ApplicationEvent event) {
-		if (event instanceof InteractiveAuthenticationSuccessEvent) {
-			onSuccessfulAuthentication(((InteractiveAuthenticationSuccessEvent) event).getAuthentication());
+		if (event instanceof AuthenticationSuccessEvent) {
+			onSuccessfulAuthentication(((AuthenticationSuccessEvent) event).getAuthentication());
+		} else if (event instanceof InteractiveAuthenticationSuccessEvent) {
+			onSuccessfulInteractiveAuthentication(((InteractiveAuthenticationSuccessEvent) event).getAuthentication());
 		}
 	}
 
@@ -49,7 +49,6 @@ public class CasEventListener implements ApplicationListener {
 		if (authentication instanceof CasAuthenticationToken) {
 			CasAuthenticationToken casToken = (CasAuthenticationToken) authentication;
 			try {
-				copyToAcegiContext(casToken);
 				syncUserAttributes(casToken);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -58,26 +57,14 @@ public class CasEventListener implements ApplicationListener {
 	}
 
 	/**
-	 * Map a Spring Security CAS authentication token into the Acegi SecurityContext.
-	 * @param casToken CAS authentication token
+	 * Successful interactive authentication event handler.
+	 * @param authentication the successful authentication object
 	 */
-	protected void copyToAcegiContext(CasAuthenticationToken casToken) {
-		// Map granted authorities
-		GrantedAuthority[] authorities = new GrantedAuthority[casToken.getAuthorities().size()];
-		int i = 0;
-		for (org.springframework.security.core.GrantedAuthority authority : casToken.getAuthorities()) {
-			authorities[i++] = new GrantedAuthorityImpl(authority.getAuthority());
+	protected void onSuccessfulInteractiveAuthentication(Authentication authentication) {
+		if (authentication instanceof CasAuthenticationToken) {
+			CasAuthenticationToken casToken = (CasAuthenticationToken) authentication;
+			SecurityContextHolder.getContext().setAuthentication(CasAuthentication.newInstance(casToken));
 		}
-
-		// Map user
-		org.springframework.security.core.userdetails.User sourceUser = (org.springframework.security.core.userdetails.User) casToken.getUserDetails();
-		User user = new User(sourceUser.getUsername(), CAS_NO_PASSWORD, sourceUser.isEnabled(), sourceUser.isAccountNonExpired(), sourceUser.isCredentialsNonExpired(), sourceUser.isAccountNonLocked(), authorities);
-
-		// Build a CasAuthentication object
-		CasAuthentication authentication = new CasAuthentication(casToken.getKeyHash(), user, casToken.getCredentials(), authorities, user, casToken.getAssertion());
-
-		// Fill the Acegi security context
-		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 
 	/**
