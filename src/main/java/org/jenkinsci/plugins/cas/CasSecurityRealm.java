@@ -117,6 +117,12 @@ public class CasSecurityRealm extends SecurityRealm {
 		return DEFAULT_FAILED_LOGIN_URL;
 	}
 
+	/**
+	 * Get the full service URL for use with CAS.
+	 * @param req current HTTP request
+	 * @param serviceProperties service properties
+	 * @return full service URL
+	 */
 	public static String getServiceUrl(HttpServletRequest req, ServiceProperties serviceProperties) {
 		String serviceUrl = serviceProperties.getService();
 		if (serviceUrl != null && !serviceUrl.startsWith("http")) {
@@ -148,7 +154,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * Get or create the CAS REST client for API authentication.
 	 * @return CAS REST authenticator
 	 */
-	private CasRestAuthenticator getCasRestAuthenticator() {
+	protected CasRestAuthenticator getCasRestAuthenticator() {
 		if (casRestAuthenticator == null) {
 			casRestAuthenticator = new CasRestAuthenticator(casProtocol, casServerUrl, getJenkinsUrl());
 		}
@@ -159,7 +165,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * Check if the CAS REST API is enabled.
 	 * @return true if enabled
 	 */
-	private boolean isRestApiEnabled() {
+	protected boolean isRestApiEnabled() {
 		return Boolean.TRUE.equals(enableRestApi);
 	}
 

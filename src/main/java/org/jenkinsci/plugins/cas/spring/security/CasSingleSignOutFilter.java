@@ -1,8 +1,6 @@
 package org.jenkinsci.plugins.cas.spring.security;
 
-import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.springframework.util.Assert;
-import org.springframework.web.filter.GenericFilterBean;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -10,7 +8,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.jasig.cas.client.session.SingleSignOutHandler;
+import org.springframework.util.Assert;
+import org.springframework.web.filter.GenericFilterBean;
 
 /**
  * CAS Single Sign-Out filter with support for a URL path matching.
@@ -21,15 +22,13 @@ public class CasSingleSignOutFilter extends GenericFilterBean {
 
 	private boolean enabled = true;
 	private String filterProcessesUrl = "/j_spring_cas_security_check";
-	private SingleSignOutFilter singleSignOutFilter;
+	private SingleSignOutHandler singleSignOutHandler;
 
 	@Override
 	public void afterPropertiesSet() throws ServletException {
 		Assert.hasLength(filterProcessesUrl, "filterProcessesUrl must be specified");
-		Assert.notNull(singleSignOutFilter, "singleSignOutFilter cannot be null");
-
-		singleSignOutFilter.setIgnoreInitConfiguration(true);
-		singleSignOutFilter.init(null);
+		Assert.notNull(singleSignOutHandler, "singleSignOutHandler cannot be null");
+		singleSignOutHandler.init();
 	}
 
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -41,7 +40,9 @@ public class CasSingleSignOutFilter extends GenericFilterBean {
 			return;
 		}
 
-		singleSignOutFilter.doFilter(req, res, chain);
+		if (singleSignOutHandler.process(request, response)) {
+			chain.doFilter(req, res);
+		}
 	}
 
 	protected boolean requiresProcessing(HttpServletRequest request, HttpServletResponse response) {
@@ -89,17 +90,17 @@ public class CasSingleSignOutFilter extends GenericFilterBean {
 	}
 
 	/**
-	 * @return the singleSignOutFilter
+	 * @return the singleSignOutHandler
 	 */
-	public SingleSignOutFilter getSingleSignOutFilter() {
-		return singleSignOutFilter;
+	public SingleSignOutHandler getSingleSignOutHandler() {
+		return singleSignOutHandler;
 	}
 
 	/**
-	 * @param singleSignOutFilter the singleSignOutFilter to set
+	 * @param singleSignOutHandler the singleSignOutHandler to set
 	 */
-	public void setSingleSignOutFilter(SingleSignOutFilter singleSignOutFilter) {
-		this.singleSignOutFilter = singleSignOutFilter;
+	public void setSingleSignOutHandler(SingleSignOutHandler singleSignOutHandler) {
+		this.singleSignOutHandler = singleSignOutHandler;
 	}
 
 }

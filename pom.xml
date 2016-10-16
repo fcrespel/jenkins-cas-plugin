@@ -28,7 +28,7 @@ THE SOFTWARE.
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.609.2</version>
+		<version>1.625.1</version>
 	</parent>
 
 	<artifactId>cas-plugin</artifactId>
@@ -85,8 +85,9 @@ THE SOFTWARE.
 	</pluginRepositories>
 
 	<properties>
-		<spring.version>2.5</spring.version>
-		<spring-security.version>3.2.7.RELEASE</spring-security.version>
+		<cas-client.version>3.4.1</cas-client.version>
+		<spring.version>2.5.6.SEC03</spring.version>
+		<spring-security.version>3.2.9.RELEASE</spring-security.version>
 		<maven-release-plugin.version>2.5.2</maven-release-plugin.version>
 	</properties>
 
@@ -99,33 +100,9 @@ THE SOFTWARE.
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>1.4</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>3.2</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>commons-httpclient</groupId>
-				<artifactId>commons-httpclient</artifactId>
-				<version>3.1</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>2.4</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>commons-logging</groupId>
-				<artifactId>commons-logging</artifactId>
-				<version>1.1.1</version>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.7</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -168,51 +145,23 @@ THE SOFTWARE.
 			<version>1.16</version>
 		</dependency>
 		<dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-core</artifactId>
+			<version>${cas-client.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-support-saml</artifactId>
+			<version>${cas-client.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-cas</artifactId>
 			<version>${spring-security.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.aspectj</groupId>
-					<artifactId>aspectjrt</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.aspectj</groupId>
-					<artifactId>aspectjweaver</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.jenkins-ci.tools</groupId>
-					<artifactId>maven-hpi-plugin</artifactId>
-					<dependencies>
-						<!-- Fix for outdated xerces:xercesImpl:jar:2.6.2, which doesn't have a proper DocumentBuilderFactory.setFeature(String, boolean) method required by opensaml -->
-						<dependency>
-							<groupId>xerces</groupId>
-							<artifactId>xercesImpl</artifactId>
-							<version>2.9.1</version>
-						</dependency>
-						<dependency>
-							<groupId>xom</groupId>
-							<artifactId>xom</artifactId>
-							<version>1.0</version>
-							<exclusions>
-								<!-- xerces:xmlParserAPIs:jar was replaced with xml-apis:xml-apis:jar -->
-								<exclusion>
-									<groupId>xerces</groupId>
-									<artifactId>xmlParserAPIs</artifactId>
-								</exclusion>
-							</exclusions>
-						</dependency>
-					</dependencies>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

@@ -3,17 +3,17 @@ import hudson.security.HttpSessionContextIntegrationFilter2
 import hudson.security.SecurityRealm
 
 import org.jasig.cas.client.session.HashMapBackedSessionMappingStorage;
-import org.jasig.cas.client.session.SingleSignOutFilter
+import org.jasig.cas.client.session.SingleSignOutHandler
 import org.jenkinsci.plugins.cas.spring.CasBeanFactory
 import org.jenkinsci.plugins.cas.spring.CasEventListener
 import org.jenkinsci.plugins.cas.spring.security.CasAuthenticationEntryPoint
-import org.jenkinsci.plugins.cas.spring.security.CasAuthenticationFilter
 import org.jenkinsci.plugins.cas.spring.security.CasSingleSignOutFilter
 import org.jenkinsci.plugins.cas.spring.security.CasUserDetailsService
 import org.jenkinsci.plugins.cas.spring.security.DynamicServiceAuthenticationDetailsSource
 import org.jenkinsci.plugins.cas.spring.security.SessionUrlAuthenticationSuccessHandler
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.cas.authentication.CasAuthenticationProvider
+import org.springframework.security.cas.web.CasAuthenticationFilter
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 
 
@@ -71,7 +71,7 @@ casFilter(ChainedServletFilter) {
 		bean(CasSingleSignOutFilter) {
 			enabled = securityRealm.enableSingleSignOut
 			filterProcessesUrl = "/" + securityRealm.finishLoginUrl
-			singleSignOutFilter = bean(SingleSignOutFilter) {
+			singleSignOutHandler = bean(SingleSignOutHandler) {
 				artifactParameterName = casProtocol.artifactParameter
 				casServerUrlPrefix = securityRealm.casServerUrl
 				sessionMappingStorage = casSessionMappingStorage

@@ -1,14 +1,14 @@
 package org.jenkinsci.plugins.cas.spring.security;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jasig.cas.client.validation.Assertion;
 import org.springframework.security.cas.userdetails.AbstractCasAssertionUserDetailsService;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Populates the {@link org.springframework.security.core.GrantedAuthority}s for a user by reading a list of attributes that were returned as
@@ -43,18 +43,18 @@ public final class CasUserDetailsService extends AbstractCasAssertionUserDetails
 					final List list = (List) value;
 
 					for (final Object o : list) {
-						grantedAuthorities.add(new GrantedAuthorityImpl(this.convertToUpperCase ? o.toString().toUpperCase() : o.toString()));
+						grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? o.toString().toUpperCase() : o.toString()));
 					}
 
 				} else {
-					grantedAuthorities.add(new GrantedAuthorityImpl(this.convertToUpperCase ? value.toString().toUpperCase() : value.toString()));
+					grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? value.toString().toUpperCase() : value.toString()));
 				}
 			}
 		}
 
 		if (this.defaultAuthorities != null) {
 			for (final String authority : this.defaultAuthorities) {
-				grantedAuthorities.add(new GrantedAuthorityImpl(authority));
+				grantedAuthorities.add(new SimpleGrantedAuthority(authority));
 			}
 		}
 
