@@ -18,7 +18,7 @@ import hudson.model.Descriptor;
 /**
  * CAS 3.0 protocol support.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class Cas30Protocol extends CasProtocol {
 

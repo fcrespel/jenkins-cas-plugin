@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
  * <tt>AuthenticationSuccessHandler</tt> that behaves like <tt>SimpleUrlAuthenticationSuccessHandler</tt>,
  * but also looks for a configurable session attribute holding the target URL to redirect to.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class SessionUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 

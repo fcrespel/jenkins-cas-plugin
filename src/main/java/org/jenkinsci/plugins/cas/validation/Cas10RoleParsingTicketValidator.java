@@ -25,7 +25,7 @@ import org.jasig.cas.client.validation.TicketValidationException;
  * This implementation also allows parsing roles from a custom extension with a Groovy script.
  *
  * @author Scott Battaglia
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBasedTicketValidator {
 
@@ -78,6 +78,7 @@ public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBased
 
 	/**
 	 * Parse roles from a custom CAS 1.0 validation response.
+	 * @param script Groovy roles validation script
 	 * @param response validation response from the CAS server
 	 * @return list of roles
 	 */

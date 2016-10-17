@@ -47,9 +47,9 @@ import jenkins.model.Jenkins;
 /**
  * CAS Single Sign-On security realm.
  * 
- * @see https://www.apereo.org/projects/cas
- * @author Fabien Crespel <fabien@crespel.net>
- * @author J. David Beutel <jbeutel@hawaii.edu>
+ * @see <a href="https://www.apereo.org/projects/cas">Apereo CAS project</a>
+ * @author Fabien Crespel
+ * @author J. David Beutel
  */
 public class CasSecurityRealm extends SecurityRealm {
 
@@ -138,6 +138,7 @@ public class CasSecurityRealm extends SecurityRealm {
 
 	/**
 	 * Create the Spring application context that will hold CAS filters.
+	 * @return Spring application context
 	 */
 	protected WebApplicationContext getApplicationContext() {
 		if (this.applicationContext == null) {
@@ -172,7 +173,8 @@ public class CasSecurityRealm extends SecurityRealm {
 	// ~ SecurityRealm implementation ===================================================================================
 
 	/**
-	 * Login begins with our {@link #doCommenceLogin(String)} method.
+	 * Login begins with our {@link #doCommenceLogin(StaplerRequest, StaplerResponse)} method.
+	 * @return Jenkins commenceLogin URL
 	 */
 	@Override
 	public String getLoginUrl() {
@@ -181,6 +183,7 @@ public class CasSecurityRealm extends SecurityRealm {
 
 	/**
 	 * Logout redirects to CAS before coming back to Jenkins.
+	 * @return CAS logout URL
 	 */
 	@Override
 	protected String getPostLogOutUrl(StaplerRequest req, Authentication auth) {
@@ -197,6 +200,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	/**
 	 * Build a authentication manager which uses the CAS REST API for username and password based authentication against
 	 * the REST API. Browser authentication is handled by the CAS filter chain.
+	 * @return SecurityComponents holder for the authentication manager
 	 */
 	@Override
 	public SecurityComponents createSecurityComponents() {
@@ -219,6 +223,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * This filter, defined in the CasSecurityRealm.groovy application context,
 	 * will wrap the original filter chain from Jenkins to preserve support for
 	 * API token authentication (among other features).
+	 * @return CAS filter
 	 */
 	@Override
 	public Filter createFilter(FilterConfig filterConfig) {
@@ -231,6 +236,10 @@ public class CasSecurityRealm extends SecurityRealm {
 
 	/**
 	 * Handles the logout processing.
+	 * @param req request
+	 * @param rsp response
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	@Override
 	public void doLogout(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
@@ -250,6 +259,10 @@ public class CasSecurityRealm extends SecurityRealm {
 	/**
 	 * The login process starts from here, using the CasAuthenticationEntryPoint
 	 * defined in the CasSecurityRealm.groovy application context.
+	 * @param req request
+	 * @param rsp response
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	public void doCommenceLogin(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
 		AuthenticationEntryPoint entryPoint = (AuthenticationEntryPoint) getApplicationContext().getBean("casAuthenticationEntryPoint");
@@ -259,6 +272,8 @@ public class CasSecurityRealm extends SecurityRealm {
 	/**
 	 * The login process finishes here, although by the time this action is called
 	 * everything has already been taken care of by filters.
+	 * @param req request
+	 * @param rsp response
 	 */
 	public void doFinishLogin(StaplerRequest req, StaplerResponse rsp) {
 		// Nothing to do

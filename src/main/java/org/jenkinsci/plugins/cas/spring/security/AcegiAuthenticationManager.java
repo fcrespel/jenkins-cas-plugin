@@ -13,7 +13,7 @@ import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
  * Acegi AuthenticationManager wrapper for a Spring AuthenticationManager.
  * This class will translate arguments, responses and exceptions between Acegi and Spring.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class AcegiAuthenticationManager implements AuthenticationManager {
 

@@ -16,7 +16,7 @@ import org.springframework.security.cas.authentication.CasAuthenticationToken;
  *
  * @author Ben Alex
  * @author Scott Battaglia
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class CasAuthentication extends AbstractAuthenticationToken implements Serializable {
 	//~ Instance fields ================================================================================================

@@ -18,7 +18,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 /**
  * CAS 2.0 protocol support.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class Cas20Protocol extends CasProtocol {
 

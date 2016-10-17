@@ -10,7 +10,7 @@ import org.springframework.security.cas.web.authentication.ServiceAuthentication
  * {@code AuthenticationDetailsSource} implementation returning a
  * {@code DynamicServiceAuthenticationDetails} supporting relative service URLs.
  *
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class DynamicServiceAuthenticationDetailsSource implements AuthenticationDetailsSource<HttpServletRequest, ServiceAuthenticationDetails> {
 

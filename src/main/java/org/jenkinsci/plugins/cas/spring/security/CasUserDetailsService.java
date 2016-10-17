@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  * value then its not added.
  *
  * @author Scott Battaglia
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public final class CasUserDetailsService extends AbstractCasAssertionUserDetailsService {
 

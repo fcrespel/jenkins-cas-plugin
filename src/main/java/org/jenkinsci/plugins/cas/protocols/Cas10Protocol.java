@@ -20,8 +20,8 @@ import org.kohsuke.stapler.QueryParameter;
 /**
  * CAS 1.0 protocol support.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
- * @author J. David Beutel <jbeutel@hawaii.edu>
+ * @author Fabien Crespel
+ * @author J. David Beutel
  */
 public class Cas10Protocol extends CasProtocol {
 

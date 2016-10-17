@@ -34,8 +34,8 @@ import org.springframework.util.Assert;
  * API requests.
  * 
  * @see <a href="https://apereo.github.io/cas/4.2.x/protocol/REST-Protocol.html">CAS REST-Protocol</a>
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Sebastian Sdorra
+ * @author Fabien Crespel
  */
 public final class CasRestAuthenticator implements InitializingBean, AuthenticationManager {
 

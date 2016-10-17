@@ -9,7 +9,7 @@ import org.springframework.util.Assert;
 /**
  * CAS-related bean factory relying on a CasProtocol backing implementation.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class CasBeanFactory implements InitializingBean {
 

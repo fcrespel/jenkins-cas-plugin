@@ -12,7 +12,7 @@ import org.jenkinsci.plugins.cas.CasSecurityRealm;
  * into a session attribute before redirecting. Additionally, the service URL
  * will be made absolute by adding the Jenkins root URL if necessary.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class CasAuthenticationEntryPoint extends org.springframework.security.cas.web.CasAuthenticationEntryPoint {
 

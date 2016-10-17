@@ -14,7 +14,7 @@ import org.springframework.security.cas.ServiceProperties;
 /**
  * SAML 1.1 protocol support.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class Saml11Protocol extends CasProtocol {
 

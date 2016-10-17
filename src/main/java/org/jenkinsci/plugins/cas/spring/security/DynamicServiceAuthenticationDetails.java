@@ -10,7 +10,7 @@ import org.springframework.security.cas.web.authentication.ServiceAuthentication
  * {@code ServiceAuthenticationDetails} implementation that will convert a relative
  * service URL to an absolute one by adding the Jenkins root URL if necessary.
  *
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class DynamicServiceAuthenticationDetails implements ServiceAuthenticationDetails {
 

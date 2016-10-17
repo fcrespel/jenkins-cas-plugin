@@ -19,7 +19,7 @@ import hudson.tasks.Mailer;
  * Listener for successful CAS authentication events, that maps Spring Security
  * Authentication to Acegi Security and syncs attributes with the corresponding Jenkins User.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class CasEventListener implements ApplicationListener {
 

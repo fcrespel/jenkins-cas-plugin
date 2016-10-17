@@ -16,7 +16,7 @@ import org.springframework.web.filter.GenericFilterBean;
 /**
  * CAS Single Sign-Out filter with support for a URL path matching.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public class CasSingleSignOutFilter extends GenericFilterBean {
 

@@ -14,7 +14,7 @@ import org.springframework.security.cas.ServiceProperties;
  * CAS protocol extension point. The protocol determines how to validate
  * a server response, and may define specific configuration options.
  * 
- * @author Fabien Crespel <fabien@crespel.net>
+ * @author Fabien Crespel
  */
 public abstract class CasProtocol extends AbstractDescribableImpl<CasProtocol> implements ExtensionPoint {
 
@@ -82,6 +82,7 @@ public abstract class CasProtocol extends AbstractDescribableImpl<CasProtocol> i
 
 	/**
 	 * Returns all the registered {@link CasProtocol} descriptors.
+	 * @return all {@link CasProtocol} descriptors
 	 */
 	public static DescriptorExtensionList<CasProtocol, Descriptor<CasProtocol>> all() {
 		return Jenkins.getInstance().<CasProtocol, Descriptor<CasProtocol>> getDescriptorList(CasProtocol.class);
