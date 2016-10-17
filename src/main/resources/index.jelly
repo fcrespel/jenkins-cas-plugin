@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
   This plugin enables use of <a href="https://www.apereo.org/projects/cas">CAS</a>
   as an authentication source, for single sign-on and single sign-out support.
