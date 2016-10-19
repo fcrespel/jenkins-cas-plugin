@@ -116,7 +116,7 @@ public class CasEventListener implements ApplicationListener {
 			Object attribute = attributes.get(attributeName);
 			if (attribute != null) {
 				if (attribute instanceof Collection) {
-					return ((Collection<String>) attribute).iterator().next();
+					return ((Collection) attribute).iterator().next().toString();
 				} else {
 					return attribute.toString();
 				}

@@ -253,7 +253,7 @@ public final class CasRestAuthenticator implements InitializingBean, Authenticat
 	private void writeContent(HttpURLConnection connection, String content) throws IOException {
 		BufferedWriter writer = null;
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+			writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), ENCODING));
 			writer.write(content);
 			writer.flush();
 		} finally {

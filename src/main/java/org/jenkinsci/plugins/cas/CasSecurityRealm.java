@@ -63,7 +63,6 @@ public class CasSecurityRealm extends SecurityRealm {
 	public final Boolean enableSingleSignOut;
 	public final Boolean enableRestApi;
 
-	private transient CasRestAuthenticator casRestAuthenticator;
 	private transient WebApplicationContext applicationContext;
 
 	@Deprecated
