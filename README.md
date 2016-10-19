@@ -21,6 +21,6 @@ Building from source
 Continuous Integration builds
 -----------------------------
 
-[![Build Status](https://jenkins.ci.cloudbees.com/buildStatus/icon?job=plugins/cas-plugin)](https://jenkins.ci.cloudbees.com/job/plugins/cas-plugin)
+[![Build Status](https://jenkins.ci.cloudbees.com/buildStatus/icon?job=plugins/cas-plugin)](https://jenkins.ci.cloudbees.com/job/plugins/job/cas-plugin/)
 
 Continuous Integration builds of the official version can be found [here](https://jenkins.ci.cloudbees.com/job/plugins/job/cas-plugin/).
