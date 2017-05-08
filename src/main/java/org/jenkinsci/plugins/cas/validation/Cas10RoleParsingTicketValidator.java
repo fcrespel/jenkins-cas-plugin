@@ -1,10 +1,6 @@
 package org.jenkinsci.plugins.cas.validation;
 
-import groovy.lang.GroovyShell;
-import groovy.lang.Script;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,13 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.authentication.AttributePrincipalImpl;
 import org.jasig.cas.client.validation.AbstractCasProtocolUrlBasedTicketValidator;
 import org.jasig.cas.client.validation.Assertion;
 import org.jasig.cas.client.validation.AssertionImpl;
 import org.jasig.cas.client.validation.TicketValidationException;
+import org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript;
+
+import groovy.lang.Binding;
+import jenkins.model.Jenkins;
 
 /**
  * Implementation of a Ticket Validator that can validate tickets conforming to the CAS 1.0 specification.
@@ -31,9 +30,8 @@ public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBased
 
 	public static final String DEFAULT_ROLE_ATTRIBUTE = "roles";
 
-	private String rolesValidationScript;
+	private SecureGroovyScript rolesValidationScript;
 	private String rolesAttribute = DEFAULT_ROLE_ATTRIBUTE;
-	private Script parsedScript;
 
 	public Cas10RoleParsingTicketValidator(final String casServerUrlPrefix) {
 		super(casServerUrlPrefix);
@@ -61,7 +59,7 @@ public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBased
 			reader.readLine();
 			final String name = reader.readLine();
 
-			List<String> roles = parseRolesFromValidationResponse(getParsedScript(), response);
+			List<String> roles = parseRolesFromValidationResponse(rolesValidationScript, response);
 			if (roles != null) {
 				Map<String, Object> attributes = new HashMap<String, Object>(1);
 				attributes.put(rolesAttribute, roles);
@@ -71,7 +69,7 @@ public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBased
 				return new AssertionImpl(name);
 			}
 
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			throw new TicketValidationException("Unable to parse response.", e);
 		}
 	}
@@ -83,13 +81,14 @@ public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBased
 	 * @return list of roles
 	 */
 	@SuppressWarnings("rawtypes")
-	public static List<String> parseRolesFromValidationResponse(Script script, String response) {
+	public static List<String> parseRolesFromValidationResponse(SecureGroovyScript script, String response) throws Exception {
 		if (script == null)
 			return null;
 
 		// Run the script to parse the response
-		script.getBinding().setVariable("response", response);
-		Collection coll = (Collection) script.run();
+		Binding binding = new Binding();
+		binding.setVariable("response", response);
+		Collection coll = (Collection) script.evaluate(Jenkins.getInstance().getPluginManager().uberClassLoader, binding);
 		if (coll == null || coll.isEmpty())
 			return null;
 
@@ -105,29 +104,17 @@ public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBased
 	}
 
 	/**
-	 * Get the parsed Groovy roles validation script.
-	 * @return parsed Groovy script
-	 */
-	protected synchronized Script getParsedScript() {
-		if (parsedScript == null && StringUtils.isNotEmpty(rolesValidationScript)) {
-			parsedScript = new GroovyShell().parse(rolesValidationScript);
-		}
-		return parsedScript;
-	}
-
-	/**
 	 * @return the rolesValidationScript
 	 */
-	public String getRolesValidationScript() {
+	public SecureGroovyScript getRolesValidationScript() {
 		return rolesValidationScript;
 	}
 
 	/**
 	 * @param rolesValidationScript the rolesValidationScript to set
 	 */
-	public void setRolesValidationScript(String rolesValidationScript) {
+	public void setRolesValidationScript(SecureGroovyScript rolesValidationScript) {
 		this.rolesValidationScript = rolesValidationScript;
-		this.parsedScript = null;
 	}
 
 	/**
