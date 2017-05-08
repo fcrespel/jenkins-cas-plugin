@@ -18,6 +18,7 @@ import hudson.Extension;
 import hudson.Util;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
+import jenkins.model.Jenkins;
 
 /**
  * CAS 1.0 protocol support.
@@ -74,10 +75,13 @@ public class Cas10Protocol extends CasProtocol {
 				@QueryParameter("rolesValidationScript") final String rolesValidationScript,
 				@QueryParameter("testValidationResponse") final String testValidationResponse,
 				@QueryParameter("sandbox") final boolean sandbox) {
+			if (!canRunScripts()) {
+				return FormValidation.error(Messages.Cas10Protocol_rolesValidationScript_noRunScriptPermissionError());
+			}
 			try {
 				Collection roles = Cas10RoleParsingTicketValidator.parseRolesFromValidationResponse(getSecureGroovyScript(rolesValidationScript, sandbox), testValidationResponse);
 				if (roles == null) {
-					return FormValidation.error(Messages.Cas10Protocol_rolesValidationScript_noResult());
+					return FormValidation.warning(Messages.Cas10Protocol_rolesValidationScript_noResult());
 				}
 				return FormValidation.ok(Messages.Cas10Protocol_rolesValidationScript_result() + ": " + roles);
 			} catch (CompilationFailedException e) {
@@ -93,6 +97,10 @@ public class Cas10Protocol extends CasProtocol {
 			} catch (Exception e) {
 				return FormValidation.error(Messages.Cas10Protocol_rolesValidationScript_unknownError() + ": " + e);
 			}
+		}
+
+		private boolean canRunScripts() {
+			return Jenkins.getInstance().getACL().hasPermission(Jenkins.RUN_SCRIPTS);
 		}
 	}
 
