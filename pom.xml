@@ -32,7 +32,7 @@ THE SOFTWARE.
 	</parent>
 
 	<artifactId>cas-plugin</artifactId>
-	<version>1.4.0</version>
+	<version>1.4.1-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	<name>CAS Plugin</name>
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/CAS+Plugin</url>
@@ -41,7 +41,7 @@ THE SOFTWARE.
 		<connection>scm:git:ssh://github.com/jenkinsci/cas-plugin.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/jenkinsci/cas-plugin.git</developerConnection>
 		<url>https://github.com/jenkinsci/cas-plugin</url>
-		<tag>cas-plugin-1.4.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<developers>
