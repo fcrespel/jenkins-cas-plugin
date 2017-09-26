@@ -60,7 +60,11 @@ public class Cas10Protocol extends CasProtocol {
 	}
 
 	private static SecureGroovyScript getSecureGroovyScript(String script, boolean sandbox) {
-		return new SecureGroovyScript(script, sandbox, null).configuringWithKeyItem();
+		if (script == null) {
+			return null;
+		} else {
+			return new SecureGroovyScript(script, sandbox, null).configuringWithKeyItem();
+		}
 	}
 
 	@Extension
