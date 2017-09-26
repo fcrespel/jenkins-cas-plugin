@@ -38,7 +38,7 @@ public class SessionUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticat
 			session.removeAttribute(targetUrlSessionAttribute);
 		}
 
-		if (isAlwaysUseDefaultTargetUrl() || StringUtils.hasText(request.getParameter(getTargetUrlParameter())) || !StringUtils.hasText(targetUrl)) {
+		if (isAlwaysUseDefaultTargetUrl() || !StringUtils.hasText(targetUrl) || (getTargetUrlParameter() != null && StringUtils.hasText(request.getParameter(getTargetUrlParameter())))) {
 			return super.determineTargetUrl(request, response);
 		}
 
