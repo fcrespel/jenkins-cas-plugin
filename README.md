@@ -1,14 +1,14 @@
 Jenkins CAS Plugin
 ==================
 
-This is a [Jenkins](http://jenkins-ci.org) plugin providing authentication with [CAS](https://www.apereo.org/projects/cas).
+This is a [Jenkins](https://jenkins.io) plugin providing authentication with [CAS](https://www.apereo.org/projects/cas).
 
 Installation
 ------------
 
-The latest version is available for download from the Update Center and from the [Download Site](http://updates.jenkins-ci.org/download/plugins/cas-plugin/).
+The latest version is available for download from the Update Center and from the [Download Site](https://updates.jenkins.io/download/plugins/cas-plugin/).
 
-For usage information, please check the [official wiki page](https://wiki.jenkins-ci.org/display/JENKINS/CAS+Plugin).
+For usage information, please check the [official plugin page](https://plugins.jenkins.io/cas-plugin).
 
 Building from source
 --------------------
@@ -21,6 +21,6 @@ Building from source
 Continuous Integration builds
 -----------------------------
 
-[![Build Status](https://jenkins.ci.cloudbees.com/buildStatus/icon?job=plugins/cas-plugin)](https://jenkins.ci.cloudbees.com/job/plugins/job/cas-plugin/)
+[![Build Status](https://ci.jenkins.io/buildStatus/icon?job=Plugins/cas-plugin/master)](https://ci.jenkins.io/job/Plugins/cas-plugin/master)
 
-Continuous Integration builds of the official version can be found [here](https://jenkins.ci.cloudbees.com/job/plugins/job/cas-plugin/).
+Continuous Integration builds of the official version can be found [here](https://ci.jenkins.io/job/Plugins/cas-plugin/master).
