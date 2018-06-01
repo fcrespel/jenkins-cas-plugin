@@ -27,6 +27,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.interceptor.RequirePOST;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -287,7 +288,10 @@ public class CasSecurityRealm extends SecurityRealm {
 			return "CAS (Central Authentication Service)";
 		}
 
+		@RequirePOST
 		public FormValidation doCheckCasServerUrl(@QueryParameter String value) throws IOException, ServletException {
+			Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+
 			value = Util.fixEmptyAndTrim(value);
 			if (value == null)
 				return FormValidation.error(Messages.CasSecurityRealm_casServerUrl_missingUrl());
