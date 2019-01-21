@@ -87,6 +87,7 @@ casFilter(ChainedServletFilter) {
 			serviceProperties = casServiceProperties
 			authenticationFailureHandler = bean(SimpleUrlAuthenticationFailureHandler, "/" + securityRealm.failedLoginUrl)
 			authenticationSuccessHandler = bean(SessionUrlAuthenticationSuccessHandler, "/")
+			continueChainBeforeSuccessfulAuthentication = true
 		}
 	]
 }
