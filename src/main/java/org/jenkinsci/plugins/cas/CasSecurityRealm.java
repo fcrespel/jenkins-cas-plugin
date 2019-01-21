@@ -16,12 +16,14 @@ import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.BadCredentialsException;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.session.SessionMappingStorage;
 import org.jasig.cas.client.util.CommonUtils;
 import org.jenkinsci.plugins.cas.spring.security.AcegiAuthenticationManager;
+import org.jenkinsci.plugins.cas.spring.security.CasAuthentication;
 import org.jenkinsci.plugins.cas.spring.security.CasRestAuthenticator;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -29,7 +31,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 import org.springframework.security.cas.ServiceProperties;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -40,10 +42,10 @@ import hudson.Util;
 import hudson.model.Descriptor;
 import hudson.security.ChainedServletFilter;
 import hudson.security.SecurityRealm;
-import hudson.security.SecurityRealm.SecurityComponents;
 import hudson.util.FormValidation;
 import hudson.util.spring.BeanBuilder;
 import jenkins.model.Jenkins;
+import jenkins.security.SecurityListener;
 
 /**
  * CAS Single Sign-On security realm.
@@ -244,7 +246,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	@Override
 	public void doLogout(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
 		// Clear Spring Security context
-		SecurityContextHolder.clearContext();
+		org.springframework.security.core.context.SecurityContextHolder.clearContext();
 
 		// Remove session from CAS single sign-out storage
 		HttpSession session = req.getSession(false);
@@ -270,13 +272,20 @@ public class CasSecurityRealm extends SecurityRealm {
 	}
 
 	/**
-	 * The login process finishes here, although by the time this action is called
-	 * everything has already been taken care of by filters.
+	 * The login process finishes here, by mapping the Spring Security
+	 * authentication back to Acegi and by firing the authenticated event.
 	 * @param req request
 	 * @param rsp response
 	 */
 	public void doFinishLogin(StaplerRequest req, StaplerResponse rsp) {
-		// Nothing to do
+		org.springframework.security.core.Authentication authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+		if (authentication instanceof CasAuthenticationToken) {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+			CasAuthenticationToken casToken = (CasAuthenticationToken) authentication;
+			CasAuthentication casAuth = CasAuthentication.newInstance(casToken);
+			SecurityContextHolder.getContext().setAuthentication(casAuth);
+			SecurityListener.fireAuthenticated(casAuth.getUserDetails());
+		}
 	}
 
 	// ~ SecurityRealm descriptor =======================================================================================

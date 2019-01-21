@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-import org.acegisecurity.context.SecurityContextHolder;
-import org.jenkinsci.plugins.cas.spring.security.CasAuthentication;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
-import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import hudson.tasks.Mailer;
 
@@ -36,16 +34,20 @@ public class CasEventListener implements ApplicationListener {
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof AuthenticationSuccessEvent) {
 			onSuccessfulAuthentication(((AuthenticationSuccessEvent) event).getAuthentication());
-		} else if (event instanceof InteractiveAuthenticationSuccessEvent) {
-			onSuccessfulInteractiveAuthentication(((InteractiveAuthenticationSuccessEvent) event).getAuthentication());
 		}
 	}
 
 	/**
 	 * Successful authentication event handler.
+	 * This event is fired immediately after authentication, before filter chain
+	 * is invoked and before Spring security context is updated.
 	 * @param authentication the successful authentication object
 	 */
 	protected void onSuccessfulAuthentication(Authentication authentication) {
+		// Set Spring security context early to allow Acegi mapping in CasSecurityRealm.doFinishLogin()
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		// Map user attributes
 		if (authentication instanceof CasAuthenticationToken) {
 			CasAuthenticationToken casToken = (CasAuthenticationToken) authentication;
 			try {
@@ -53,17 +55,6 @@ public class CasEventListener implements ApplicationListener {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		}
-	}
-
-	/**
-	 * Successful interactive authentication event handler.
-	 * @param authentication the successful authentication object
-	 */
-	protected void onSuccessfulInteractiveAuthentication(Authentication authentication) {
-		if (authentication instanceof CasAuthenticationToken) {
-			CasAuthenticationToken casToken = (CasAuthenticationToken) authentication;
-			SecurityContextHolder.getContext().setAuthentication(CasAuthentication.newInstance(casToken));
 		}
 	}
 
