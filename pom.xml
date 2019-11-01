@@ -35,7 +35,7 @@ THE SOFTWARE.
 	<version>1.4.4-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	<name>CAS Plugin</name>
-	<url>http://wiki.jenkins-ci.org/display/JENKINS/CAS+Plugin</url>
+	<url>https://github.com/jenkinsci/cas-plugin</url>
 
 	<scm>
 		<connection>scm:git:ssh://github.com/jenkinsci/cas-plugin.git</connection>
