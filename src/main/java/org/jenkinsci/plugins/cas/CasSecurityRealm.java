@@ -12,17 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.acegisecurity.Authentication;
-import org.acegisecurity.AuthenticationException;
-import org.acegisecurity.AuthenticationManager;
-import org.acegisecurity.BadCredentialsException;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
-import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.util.CommonUtils;
-import org.jenkinsci.plugins.cas.spring.security.AcegiAuthenticationManager;
-import org.jenkinsci.plugins.cas.spring.security.CasAuthentication;
 import org.jenkinsci.plugins.cas.spring.security.CasRestAuthenticator;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -51,10 +42,17 @@ import org.jenkinsci.plugins.cas.spring.security.CasSingleSignOutFilter;
 import org.jenkinsci.plugins.cas.spring.security.CasUserDetailsService;
 import org.jenkinsci.plugins.cas.spring.security.DynamicServiceAuthenticationDetailsSource;
 import org.jenkinsci.plugins.cas.spring.security.SessionUrlAuthenticationSuccessHandler;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
@@ -180,7 +178,7 @@ public class CasSecurityRealm extends SecurityRealm {
                 casAuthenticationUserDetailsService = new CasUserDetailsService();
                 casAuthenticationUserDetailsService.setAttributes(casProtocol.getAuthoritiesAttributes());
                 casAuthenticationUserDetailsService.setConvertToUpperCase(false);
-                casAuthenticationUserDetailsService.setDefaultAuthorities(new String[] {AUTHENTICATED_AUTHORITY.getAuthority()});
+                casAuthenticationUserDetailsService.setDefaultAuthorities(new String[] {AUTHENTICATED_AUTHORITY2.getAuthority()});
             }
             CasAuthenticationProvider casAuthenticationProvider;
             {
@@ -285,7 +283,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * @return CAS logout URL
 	 */
 	@Override
-	protected String getPostLogOutUrl(StaplerRequest req, Authentication auth) {
+	protected String getPostLogOutUrl2(StaplerRequest req, Authentication auth) {
 		StringBuilder logoutUrlBuilder = new StringBuilder(casServerUrl);
 		logoutUrlBuilder.append("logout?service=");
 		try {
@@ -309,7 +307,7 @@ public class CasSecurityRealm extends SecurityRealm {
 				if (authentication instanceof AnonymousAuthenticationToken) {
 					return authentication;
 				} else if ((authentication instanceof UsernamePasswordAuthenticationToken) && isRestApiEnabled()) {
-					return new AcegiAuthenticationManager(getCasRestAuthenticator()).authenticate(authentication);
+					return getCasRestAuthenticator().authenticate(authentication);
 				} else {
 					throw new BadCredentialsException("Unexpected authentication type: " + authentication);
 				}
@@ -369,8 +367,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	}
 
 	/**
-	 * The login process finishes here, by mapping the Spring Security
-	 * authentication back to Acegi and by firing the authenticated event.
+	 * The login process finishes here, by firing the authenticated event.
 	 * @param req request
 	 * @param rsp response
 	 */
@@ -379,9 +376,8 @@ public class CasSecurityRealm extends SecurityRealm {
 		if (authentication instanceof CasAuthenticationToken) {
 			org.springframework.security.core.context.SecurityContextHolder.clearContext();
 			CasAuthenticationToken casToken = (CasAuthenticationToken) authentication;
-			CasAuthentication casAuth = CasAuthentication.newInstance(casToken);
-			SecurityContextHolder.getContext().setAuthentication(casAuth);
-			SecurityListener.fireAuthenticated(casAuth.getUserDetails());
+			SecurityContextHolder.getContext().setAuthentication(casToken);
+			SecurityListener.fireAuthenticated2(casToken.getUserDetails());
 		}
 	}
 

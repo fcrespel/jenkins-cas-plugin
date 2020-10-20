@@ -14,8 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import hudson.tasks.Mailer;
 
 /**
- * Listener for successful CAS authentication events, that maps Spring Security
- * Authentication to Acegi Security and syncs attributes with the corresponding Jenkins User.
+ * Listener for successful CAS authentication events that syncs attributes with the corresponding Jenkins User.
  * 
  * @author Fabien Crespel
  */
@@ -44,7 +43,7 @@ public class CasEventListener implements ApplicationListener {
 	 * @param authentication the successful authentication object
 	 */
 	protected void onSuccessfulAuthentication(Authentication authentication) {
-		// Set Spring security context early to allow Acegi mapping in CasSecurityRealm.doFinishLogin()
+		// Set Spring security context early to allow Acegi mapping in CasSecurityRealm.doFinishLogin() (perhaps now obsolete)
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		// Map user attributes
