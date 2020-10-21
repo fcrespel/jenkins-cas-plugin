@@ -90,7 +90,7 @@ THE SOFTWARE.
 		<changelist>-SNAPSHOT</changelist>
 		<gitHubRepo>jenkinsci/cas-plugin</gitHubRepo>
 		<java.level>8</java.level>
-                <jenkins.version>2.264-rc30667.757e1a7eb5db</jenkins.version> <!-- TODO https://github.com/jenkinsci/jenkins/pull/4848 -->
+                <jenkins.version>2.264-rc30668.ffe273a43a61</jenkins.version> <!-- TODO https://github.com/jenkinsci/jenkins/pull/4848 -->
 		<findbugs.failOnError>false</findbugs.failOnError>
 	</properties>
 

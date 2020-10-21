@@ -28,6 +28,7 @@ import hudson.Extension;
 import hudson.Util;
 import hudson.model.Descriptor;
 import hudson.security.ChainedServletFilter;
+import hudson.security.HttpSessionContextIntegrationFilter2;
 import hudson.security.SecurityRealm;
 import hudson.tasks.Mailer;
 import hudson.util.FormValidation;
@@ -206,8 +207,7 @@ public class CasSecurityRealm extends SecurityRealm {
             {
                 HttpSessionSecurityContextRepository httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
                 httpSessionSecurityContextRepository.setAllowSessionCreation(false);
-                // TODO restricted: securityContextPersistenceFilter = new HttpSessionContextIntegrationFilter2(httpSessionSecurityContextRepository);
-                securityContextPersistenceFilter = new SecurityContextPersistenceFilter(httpSessionSecurityContextRepository);
+                securityContextPersistenceFilter = new HttpSessionContextIntegrationFilter2(httpSessionSecurityContextRepository);
             }
             CasSingleSignOutFilter casSingleSignOutFilter;
             {
