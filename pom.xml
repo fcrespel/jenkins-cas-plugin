@@ -64,7 +64,7 @@ THE SOFTWARE.
 			<email>sebastian.sdorra@triology.de</email>
 		</contributor>
 	</contributors>
-	
+
 	<licenses>
 		<license>
 			<name>The MIT License</name>
@@ -91,7 +91,7 @@ THE SOFTWARE.
 		<gitHubRepo>jenkinsci/cas-plugin</gitHubRepo>
 		<java.level>8</java.level>
 		<jenkins.version>2.266</jenkins.version>
-		<findbugs.failOnError>false</findbugs.failOnError>
+		<spotbugs.failOnError>false</spotbugs.failOnError>
 	</properties>
 
 	<dependencyManagement>
