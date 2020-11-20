@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
  * Authenticator to handle the CAS REST protocol. The authenticator is mainly to handle username and password based
  * API requests.
  * 
- * @see <a href="https://apereo.github.io/cas/4.2.x/protocol/REST-Protocol.html">CAS REST-Protocol</a>
+ * @see <a href="https://apereo.github.io/cas/6.2.x/protocol/REST-Protocol.html">CAS REST-Protocol</a>
  * @author Sebastian Sdorra
  * @author Fabien Crespel
  */

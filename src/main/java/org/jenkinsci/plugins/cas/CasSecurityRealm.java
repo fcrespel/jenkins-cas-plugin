@@ -50,7 +50,7 @@ import jenkins.security.SecurityListener;
 /**
  * CAS Single Sign-On security realm.
  * 
- * @see <a href="https://www.apereo.org/projects/cas">Apereo CAS project</a>
+ * @see <a href="https://apereo.github.io/cas/">Apereo CAS project</a>
  * @author Fabien Crespel
  * @author J. David Beutel
  */

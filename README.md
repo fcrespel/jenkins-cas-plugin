@@ -4,7 +4,7 @@
 
 # Jenkins CAS Plugin
 
-This is a [Jenkins](https://jenkins.io) plugin providing authentication with [CAS](https://www.apereo.org/projects/cas), with single sign-on and single sign-out support.
+This is a [Jenkins](https://jenkins.io) plugin providing authentication with [CAS](https://apereo.github.io/cas/), with single sign-on and single sign-out support.
 
 
 ## Installation
@@ -35,7 +35,7 @@ The latest version is available for download from the Update Center and from the
 Additional configuration options are available under the **Security Realm** section:
 
 - **Force Renewal:** when checked, single sign-on is disabled: even if a CAS session is already open, the user will have to provide credentials again to confirm his identity.
-- **Enable REST API:** when checked, the [CAS REST API](https://apereo.github.io/cas/4.2.x/protocol/REST-Protocol.html) will be used to authenticate Jenkins API requests (in addition to Jenkins API keys).
+- **Enable REST API:** when checked, the [CAS REST API](https://apereo.github.io/cas/6.2.x/protocol/REST-Protocol.html) will be used to authenticate Jenkins API requests (in addition to Jenkins API keys).
 - **Enable Single Sign-Out:** when checked, single sign-out is enabled: whenever the user logs out of CAS (e.g. when logging out of another CAS-enabled application), the corresponding Jenkins session will be destroyed and the local user logged out as well. Note that for this to work, the CAS server must be able to communicate with Jenkins using the service URL that was passed to it during login.
 
 Several protocols implemented by CAS are available in the **CAS Protocol** dropdown (click the **Advanced...** button to reveal more options):
@@ -45,7 +45,7 @@ Several protocols implemented by CAS are available in the **CAS Protocol** dropd
 - **CAS 3.0:** a XML-based protocol. It supports **Proxy Tickets**, allowing external applications already secured with CAS to authenticate in Jenkins without requiring user input or password. It fully supports attributes out-of-the-box, without requiring custom extensions. **This is a recommended protocol for Apereo CAS Server 4.x and higher.**
 - **SAML 1.1:** a XML-based protocol. It fully supports attributes out-of-the-box, without requiring custom extensions. **This is a recommended protocol for Apereo CAS Server 3.x and higher.**
 
-[Attributes](https://apereo.github.io/cas/4.2.x/integration/Attribute-Release.html) are an easy (and recommended) way to add full name and email address information to an authenticated user, as well as roles/groups membership. CAS 1.0 response parsing with a custom Groovy script is made available as a legacy option for backward compatibility with the [CAS1 Plugin](https://wiki.jenkins.io/display/JENKINS/CAS1+Plugin).
+[Attributes](https://apereo.github.io/cas/6.2.x/integration/Attribute-Release.html) are an easy (and recommended) way to add full name and email address information to an authenticated user, as well as roles/groups membership. CAS 1.0 response parsing with a custom Groovy script is made available as a legacy option for backward compatibility with the [CAS1 Plugin](https://wiki.jenkins.io/display/JENKINS/CAS1+Plugin).
 
 
 ## Usage
@@ -57,7 +57,7 @@ By default, when using the CAS plugin for authentication, you **cannot use a reg
 You have two options:
 
 - Use the user's **API token** as the password; you can find it by going to the **Configuration** page of the **Jenkins user** you intend to use for external access. This API token does not expire and you may regenerate it as you need.
-- Enable the **REST API** option in the plugin configuration, to use the [CAS REST API](https://apereo.github.io/cas/4.2.x/protocol/REST-Protocol.html) to process the real username/password. The CAS REST protocol must be enabled server-side for this option to work.
+- Enable the **REST API** option in the plugin configuration, to use the [CAS REST API](https://apereo.github.io/cas/6.2.x/protocol/REST-Protocol.html) to process the real username/password. The CAS REST protocol must be enabled server-side for this option to work.
 
 See the following page for more information: [Authenticating scripted clients](https://wiki.jenkins.io/display/JENKINS/Authenticating+scripted+clients)
 
@@ -73,7 +73,7 @@ When using Jenkins behind a reverse proxy, depending on configuration the URL us
 
 ### SSL certificate issues
 
-Please see the [Troubleshooting Guide](https://apereo.github.io/cas/4.2.x/installation/Troubleshooting-Guide.html#pkix-path-building-failed) from the CAS Project.
+Please see the [Troubleshooting Guide](https://apereo.github.io/cas/6.2.x/installation/Troubleshooting-Guide.html#pkix-path-building-failed) from the CAS Project.
 
 ### Issue validating SAML 1.1 tickets
 
