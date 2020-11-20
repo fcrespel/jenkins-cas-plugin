@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Compatibility with Jenkins 2.266+ (replacement of Acegi Security with Spring Security, see [JEP-227](https://github.com/jenkinsci/jep/tree/master/jep/227)).
+- Added support for CAS 3.0 JSON protocol format.
 
 ## [1.4.3] - 2019-01-21
 
