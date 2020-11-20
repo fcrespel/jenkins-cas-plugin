@@ -67,6 +67,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	public final Boolean forceRenewal;
 	public final Boolean enableSingleSignOut;
 	public final Boolean enableRestApi;
+	public final Boolean enableLogoutRedirect;
 
 	private transient ApplicationContext applicationContext;
 
@@ -75,13 +76,19 @@ public class CasSecurityRealm extends SecurityRealm {
 		this(casServerUrl, casProtocol, forceRenewal, enableSingleSignOut, false);
 	}
 
-	@DataBoundConstructor
+	@Deprecated
 	public CasSecurityRealm(String casServerUrl, CasProtocol casProtocol, Boolean forceRenewal, Boolean enableSingleSignOut, Boolean enableRestApi) {
+		this(casServerUrl, casProtocol, forceRenewal, enableSingleSignOut, enableRestApi, true);
+	}
+
+	@DataBoundConstructor
+	public CasSecurityRealm(String casServerUrl, CasProtocol casProtocol, Boolean forceRenewal, Boolean enableSingleSignOut, Boolean enableRestApi, Boolean enableLogoutRedirect) {
 		this.casServerUrl = StringUtils.stripEnd(casServerUrl, "/") + "/";
 		this.casProtocol = casProtocol;
 		this.forceRenewal = forceRenewal;
 		this.enableSingleSignOut = enableSingleSignOut;
 		this.enableRestApi = enableRestApi;
+		this.enableLogoutRedirect = enableLogoutRedirect;
 	}
 
 	// ~ Public getters =================================================================================================
@@ -170,19 +177,23 @@ public class CasSecurityRealm extends SecurityRealm {
 	}
 
 	/**
-	 * Logout redirects to CAS before coming back to Jenkins.
+	 * Logout redirects to CAS before coming back to Jenkins (unless disabled).
 	 * @return CAS logout URL
 	 */
 	@Override
 	protected String getPostLogOutUrl2(StaplerRequest req, Authentication auth) {
-		StringBuilder logoutUrlBuilder = new StringBuilder(casServerUrl);
-		logoutUrlBuilder.append("logout?service=");
-		try {
-			logoutUrlBuilder.append(URLEncoder.encode(getJenkinsUrl(), "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+		if (Boolean.TRUE.equals(this.enableLogoutRedirect)) {
+			StringBuilder logoutUrlBuilder = new StringBuilder(casServerUrl);
+			logoutUrlBuilder.append("logout?service=");
+			try {
+				logoutUrlBuilder.append(URLEncoder.encode(getJenkinsUrl(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
+			return logoutUrlBuilder.toString();
+		} else {
+			return super.getPostLogOutUrl2(req, auth);
 		}
-		return logoutUrlBuilder.toString();
 	}
 
 	/**

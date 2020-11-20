@@ -1,0 +1,16 @@
+<div>
+    When checked, Jenkins will redirect to CAS after logging out the local user, in order
+    to destroy the SSO session. Other CAS-enabled applications implementing 
+    <a href="https://apereo.github.io/cas/6.2.x/installation/Logout-Single-Signout.html" target="_blank">Single Logout (SLO)</a>
+    may also opt to destroy their sessions.
+    
+    <p>
+    If CAS is configured to follow logout redirects, it will automatically come back
+    to Jenkins after destroying the SSO session.
+    
+    <p>
+    Note that disabling this feature while making authentication mandatory will immediately
+    redirect the user to CAS login after logging out of Jenkins, which in turn will validate
+    the SSO session and re-authenticate the user in Jenkins. This could cause confusion for
+    users who may think they can't logout.
+</div>

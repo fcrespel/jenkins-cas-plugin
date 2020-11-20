@@ -13,4 +13,7 @@
   <f:entry title="${%enableSingleSignOut}" field="enableSingleSignOut">
     <f:checkbox default="true" />
   </f:entry>
+  <f:entry title="${%enableLogoutRedirect}" field="enableLogoutRedirect">
+    <f:checkbox default="true" />
+  </f:entry>
 </j:jelly>

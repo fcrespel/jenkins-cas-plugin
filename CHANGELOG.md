@@ -2,8 +2,10 @@
 
 ## [Unreleased]
 
-- Compatibility with Jenkins 2.266+ (replacement of Acegi Security with Spring Security, see [JEP-227](https://github.com/jenkinsci/jep/tree/master/jep/227)).
+- Compatibility with Jenkins 2.266 and higher (replacement of Acegi Security with Spring Security, see [JEP-227](https://github.com/jenkinsci/jep/tree/master/jep/227)).
+- Incompatibility with Jenkins 2.265 and lower (for the reason above), please make sure to upgrade CAS plugin and Jenkins together.
 - Added support for CAS 3.0 JSON protocol format.
+- Added option to control redirection to CAS after logging out of Jenkins.
 
 ## [1.4.3] - 2019-01-21
 

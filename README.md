@@ -4,7 +4,7 @@
 
 # Jenkins CAS Plugin
 
-This is a [Jenkins](https://jenkins.io) plugin providing authentication with [CAS](https://apereo.github.io/cas/), with single sign-on and single sign-out support.
+This is a [Jenkins](https://jenkins.io) plugin providing authentication with [CAS](https://apereo.github.io/cas/), with Single Sign-On (SSO) and Single Logout (SLO) support.
 
 
 ## Installation
@@ -13,8 +13,9 @@ The latest version is available for download from the Update Center and from the
 
 ### Upgrade notice
 
-- Jenkins **2.266+** requires CAS plugin version **1.5.0+**
-- Jenkins **2.160** and **2.150.2 LTS** require CAS plugin version **1.4.3**
+- Jenkins **2.266 and higher** require CAS plugin version **1.5.0**.
+- Jenkins **2.265 and lower** require CAS plugin version **1.4.3** (1.5.0 is _NOT_ compatible).
+- Jenkins **2.160 or 2.150.2 LTS** and higher require CAS plugin version **1.4.3**.
 
 In these cases, you will need to upgrade Jenkins and CAS plugin together to avoid issues. This means manually downloading and updating the `cas-plugin.hpi` file in your Jenkins `plugins` directory (rename to `cas-plugin.jpi` as needed).
 
@@ -41,9 +42,10 @@ In these cases, you will need to upgrade Jenkins and CAS plugin together to avoi
 
 Additional configuration options are available under the **Security Realm** section:
 
-- **Force Renewal:** when checked, single sign-on is disabled: even if a CAS session is already open, the user will have to provide credentials again to confirm his identity.
-- **Enable REST API:** when checked, the [CAS REST API](https://apereo.github.io/cas/6.2.x/protocol/REST-Protocol.html) will be used to authenticate Jenkins API requests (in addition to Jenkins API keys).
-- **Enable Single Sign-Out:** when checked, single sign-out is enabled: whenever the user logs out of CAS (e.g. when logging out of another CAS-enabled application), the corresponding Jenkins session will be destroyed and the local user logged out as well. Note that for this to work, the CAS server must be able to communicate with Jenkins using the service URL that was passed to it during login.
+- **Force authentication renewal:** when checked, Single Sign-On (SSO) is disabled: even if a CAS session is already open, the user will have to provide credentials again to confirm his/her identity.
+- **Use CAS REST API for external/scripted clients:** when checked, the [CAS REST API](https://apereo.github.io/cas/6.2.x/protocol/REST-Protocol.html) will be used to authenticate Jenkins API requests (in addition to Jenkins API keys) using a username/password.
+- **Process Single Logout (SLO) requests from CAS:** when checked, Single Logout is enabled: whenever the user logs out of CAS (e.g. when logging out of another CAS-enabled application), the corresponding Jenkins session will be destroyed and the local user logged out as well. Note that for this to work, the CAS server must be able to communicate with Jenkins using the service URL that was passed to it during login.
+- **Logout from CAS when logging out of Jenkins:** when checked, Jenkins will redirect to CAS after logging out the local user, in order to destroy the SSO session.
 
 Several protocols implemented by CAS are available in the **CAS Protocol** dropdown (click the **Advanced...** button to reveal more options):
 
