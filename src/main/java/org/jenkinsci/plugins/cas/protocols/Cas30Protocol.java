@@ -8,6 +8,8 @@ import org.jasig.cas.client.validation.Cas30ProxyTicketValidator;
 import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
 import org.jasig.cas.client.validation.ProxyList;
 import org.jasig.cas.client.validation.TicketValidator;
+import org.jasig.cas.client.validation.json.Cas30JsonProxyTicketValidator;
+import org.jasig.cas.client.validation.json.Cas30JsonServiceTicketValidator;
 import org.jenkinsci.plugins.cas.CasProtocol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -25,21 +27,33 @@ public class Cas30Protocol extends CasProtocol {
 	public final Boolean proxyEnabled;
 	public final Boolean proxyAllowAny;
 	public final String proxyAllowList;
+	public final Boolean jsonEnabled;
+
+	@Deprecated
+	public Cas30Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute, Boolean proxyEnabled, Boolean proxyAllowAny, String proxyAllowList) {
+		this(authoritiesAttribute, fullNameAttribute, emailAttribute, proxyEnabled, proxyAllowAny, proxyAllowList, false);
+	}
 
 	@DataBoundConstructor
-	public Cas30Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute, Boolean proxyEnabled, Boolean proxyAllowAny, String proxyAllowList) {
+	public Cas30Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute, Boolean proxyEnabled, Boolean proxyAllowAny, String proxyAllowList, Boolean jsonEnabled) {
 		this.authoritiesAttribute = Util.fixEmptyAndTrim(authoritiesAttribute);
 		this.fullNameAttribute = Util.fixEmptyAndTrim(fullNameAttribute);
 		this.emailAttribute = Util.fixEmptyAndTrim(emailAttribute);
 		this.proxyEnabled = proxyEnabled;
 		this.proxyAllowAny = proxyAllowAny;
 		this.proxyAllowList = proxyAllowList;
+		this.jsonEnabled = jsonEnabled;
 	}
 
 	@Override
 	public TicketValidator createTicketValidator(String casServerUrl) {
 		if (this.proxyEnabled != null && this.proxyEnabled) {
-			Cas30ProxyTicketValidator ptv = new Cas30ProxyTicketValidator(casServerUrl);
+			Cas30ProxyTicketValidator ptv;
+			if (Boolean.TRUE.equals(this.jsonEnabled)) {
+				ptv = new Cas30JsonProxyTicketValidator(casServerUrl);
+			} else {
+				ptv = new Cas30ProxyTicketValidator(casServerUrl);
+			}
 			ptv.setAcceptAnyProxy(this.proxyAllowAny);
 			String[] proxyChain = StringUtils.split(this.proxyAllowList, '\n');
 			if (proxyChain != null && proxyChain.length > 0) {
@@ -49,7 +63,11 @@ public class Cas30Protocol extends CasProtocol {
 			}
 			return ptv;
 		} else {
-			return new Cas30ServiceTicketValidator(casServerUrl);
+			if (Boolean.TRUE.equals(this.jsonEnabled)) {
+				return new Cas30JsonServiceTicketValidator(casServerUrl);
+			} else {
+				return new Cas30ServiceTicketValidator(casServerUrl);
+			}
 		}
 	}
 

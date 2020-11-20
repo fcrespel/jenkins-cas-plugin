@@ -28,5 +28,8 @@
         </f:optionalBlock>
       </table>
     </f:entry>
+    <f:entry title="${%jsonEnabled}" field="jsonEnabled">
+      <f:checkbox />
+    </f:entry>
   </f:advanced>
 </j:jelly>
