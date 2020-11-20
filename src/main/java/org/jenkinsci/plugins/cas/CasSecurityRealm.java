@@ -91,7 +91,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * @return Jenkins URL
 	 */
 	public static String getJenkinsUrl() {
-		return Jenkins.getInstance().getRootUrl();
+		return Jenkins.get().getRootUrl();
 	}
 
 	/**
@@ -276,7 +276,7 @@ public class CasSecurityRealm extends SecurityRealm {
 
 		@RequirePOST
 		public FormValidation doCheckCasServerUrl(@QueryParameter String value) throws IOException, ServletException {
-			Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
+			Jenkins.get().checkPermission(Jenkins.ADMINISTER);
 
 			value = Util.fixEmptyAndTrim(value);
 			if (value == null)

@@ -88,7 +88,7 @@ public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBased
 		// Run the script to parse the response
 		Binding binding = new Binding();
 		binding.setVariable("response", response);
-		Collection coll = (Collection) script.evaluate(Jenkins.getInstance().getPluginManager().uberClassLoader, binding);
+		Collection coll = (Collection) script.evaluate(Jenkins.get().getPluginManager().uberClassLoader, binding, null);
 		if (coll == null || coll.isEmpty())
 			return null;
 

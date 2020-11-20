@@ -85,7 +85,7 @@ public abstract class CasProtocol extends AbstractDescribableImpl<CasProtocol> i
 	 * @return all {@link CasProtocol} descriptors
 	 */
 	public static DescriptorExtensionList<CasProtocol, Descriptor<CasProtocol>> all() {
-		return Jenkins.getInstance().<CasProtocol, Descriptor<CasProtocol>> getDescriptorList(CasProtocol.class);
+		return Jenkins.get().<CasProtocol, Descriptor<CasProtocol>> getDescriptorList(CasProtocol.class);
 	}
 
 }

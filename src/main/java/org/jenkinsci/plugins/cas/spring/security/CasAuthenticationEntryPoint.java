@@ -33,7 +33,7 @@ public class CasAuthenticationEntryPoint extends org.springframework.security.ca
 	@Override
 	protected String createServiceUrl(HttpServletRequest request, HttpServletResponse response) {
 		String serviceUrl = CasSecurityRealm.getServiceUrl(request, getServiceProperties());
-		return CommonUtils.constructServiceUrl(null, response, serviceUrl, null, getServiceProperties().getArtifactParameter(), getEncodeServiceUrlWithSessionId());
+		return CommonUtils.constructServiceUrl(null, response, serviceUrl, null, getServiceProperties().getServiceParameter(), getServiceProperties().getArtifactParameter(), getEncodeServiceUrlWithSessionId());
 	}
 
 	/**

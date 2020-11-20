@@ -104,7 +104,7 @@ public class Cas10Protocol extends CasProtocol {
 		}
 
 		private boolean canRunScripts() {
-			return Jenkins.getInstance().getACL().hasPermission(Jenkins.RUN_SCRIPTS);
+			return Jenkins.get().getACL().hasPermission(Jenkins.ADMINISTER);
 		}
 	}
 
