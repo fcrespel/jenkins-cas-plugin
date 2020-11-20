@@ -41,15 +41,11 @@ public class Cas10Protocol extends CasProtocol {
 
 	@DataBoundConstructor
 	public Cas10Protocol(String rolesValidationScript, String testValidationResponse, boolean sandbox) {
+		super(Cas10RoleParsingTicketValidator.DEFAULT_ROLE_ATTRIBUTE);
 		this.rolesValidationScript = Util.fixEmptyAndTrim(rolesValidationScript);
 		this.testValidationResponse = Util.fixEmpty(testValidationResponse);
 		this.sandbox = sandbox;
 		this.secureRolesValidationScript = getSecureGroovyScript(this.rolesValidationScript, this.sandbox);
-	}
-
-	@Override
-	public String getAuthoritiesAttribute() {
-		return Cas10RoleParsingTicketValidator.DEFAULT_ROLE_ATTRIBUTE;
 	}
 
 	@Override

@@ -14,7 +14,6 @@ import org.jenkinsci.plugins.cas.CasProtocol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
-import hudson.Util;
 import hudson.model.Descriptor;
 
 /**
@@ -36,9 +35,7 @@ public class Cas30Protocol extends CasProtocol {
 
 	@DataBoundConstructor
 	public Cas30Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute, Boolean proxyEnabled, Boolean proxyAllowAny, String proxyAllowList, Boolean jsonEnabled) {
-		this.authoritiesAttribute = Util.fixEmptyAndTrim(authoritiesAttribute);
-		this.fullNameAttribute = Util.fixEmptyAndTrim(fullNameAttribute);
-		this.emailAttribute = Util.fixEmptyAndTrim(emailAttribute);
+		super(authoritiesAttribute, fullNameAttribute, emailAttribute);
 		this.proxyEnabled = proxyEnabled;
 		this.proxyAllowAny = proxyAllowAny;
 		this.proxyAllowList = proxyAllowList;

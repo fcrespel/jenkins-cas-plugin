@@ -1,14 +1,18 @@
 package org.jenkinsci.plugins.cas;
 
-import hudson.DescriptorExtensionList;
-import hudson.ExtensionPoint;
-import hudson.model.AbstractDescribableImpl;
-import hudson.model.Descriptor;
-import jenkins.model.Jenkins;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.springframework.security.cas.ServiceProperties;
+
+import hudson.DescriptorExtensionList;
+import hudson.ExtensionPoint;
+import hudson.Util;
+import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
+import jenkins.model.Jenkins;
 
 /**
  * CAS protocol extension point. The protocol determines how to validate
@@ -18,11 +22,26 @@ import org.springframework.security.cas.ServiceProperties;
  */
 public abstract class CasProtocol extends AbstractDescribableImpl<CasProtocol> implements ExtensionPoint {
 
+	public final String authoritiesAttribute;
+	public final String fullNameAttribute;
+	public final String emailAttribute;
+
 	protected transient String artifactParameter = null;
-	protected transient String[] authoritiesAttributes = null;
-	protected String authoritiesAttribute = null;
-	protected String fullNameAttribute = null;
-	protected String emailAttribute = null;
+	protected transient List<String> authoritiesAttributes = null;
+
+	protected CasProtocol() {
+		this(null, null, null);
+	}
+
+	protected CasProtocol(String authoritiesAttribute) {
+		this(authoritiesAttribute, null, null);
+	}
+
+	protected CasProtocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute) {
+		this.authoritiesAttribute = Util.fixEmptyAndTrim(authoritiesAttribute);
+		this.fullNameAttribute = Util.fixEmptyAndTrim(fullNameAttribute);
+		this.emailAttribute = Util.fixEmptyAndTrim(emailAttribute);
+	}
 
 	/**
 	 * @return the artifactParameter
@@ -44,9 +63,9 @@ public abstract class CasProtocol extends AbstractDescribableImpl<CasProtocol> i
 	/**
 	 * @return the authoritiesAttributes
 	 */
-	public String[] getAuthoritiesAttributes() {
+	public List<String> getAuthoritiesAttributes() {
 		if (authoritiesAttributes == null) {
-			authoritiesAttributes = StringUtils.split(getAuthoritiesAttribute(), ",");
+			authoritiesAttributes = Arrays.asList(StringUtils.split(getAuthoritiesAttribute(), ","));
 		}
 		return authoritiesAttributes;
 	}

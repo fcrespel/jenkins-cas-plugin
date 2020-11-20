@@ -1,5 +1,7 @@
 package org.jenkinsci.plugins.cas.spring;
 
+import java.util.Collections;
+
 import org.jasig.cas.client.session.HashMapBackedSessionMappingStorage;
 import org.jasig.cas.client.session.SessionMappingStorage;
 import org.jasig.cas.client.session.SingleSignOutHandler;
@@ -7,12 +9,12 @@ import org.jasig.cas.client.validation.AbstractUrlBasedTicketValidator;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.jenkinsci.plugins.cas.CasProtocol;
 import org.jenkinsci.plugins.cas.CasSecurityRealm;
-import org.jenkinsci.plugins.cas.spring.security.CasAuthenticationEntryPoint;
 import org.jenkinsci.plugins.cas.spring.security.CasRestAuthenticator;
 import org.jenkinsci.plugins.cas.spring.security.CasSingleSignOutFilter;
 import org.jenkinsci.plugins.cas.spring.security.CasUserDetailsService;
 import org.jenkinsci.plugins.cas.spring.security.DynamicServiceAuthenticationDetailsSource;
 import org.jenkinsci.plugins.cas.spring.security.SessionUrlAuthenticationSuccessHandler;
+import org.jenkinsci.plugins.cas.spring.security.SessionUrlCasAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
@@ -21,6 +23,7 @@ import org.springframework.security.authentication.DefaultAuthenticationEventPub
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
+import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -75,7 +78,7 @@ public class CasConfigurationContext {
 		CasUserDetailsService casUserDetailsService = new CasUserDetailsService();
 		casUserDetailsService.setAttributes(casProtocol.getAuthoritiesAttributes());
 		casUserDetailsService.setConvertToUpperCase(false);
-		casUserDetailsService.setDefaultAuthorities(new String[] {SecurityRealm.AUTHENTICATED_AUTHORITY2.getAuthority()});
+		casUserDetailsService.setDefaultAuthorities(Collections.singletonList(SecurityRealm.AUTHENTICATED_AUTHORITY2.getAuthority()));
 		return casUserDetailsService;
 	}
 
@@ -97,7 +100,7 @@ public class CasConfigurationContext {
 
 	@Bean
 	public CasAuthenticationEntryPoint casAuthenticationEntryPoint(CasSecurityRealm securityRealm, ServiceProperties casServiceProperties) {
-		CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
+		SessionUrlCasAuthenticationEntryPoint casAuthenticationEntryPoint = new SessionUrlCasAuthenticationEntryPoint();
 		casAuthenticationEntryPoint.setLoginUrl(securityRealm.casServerUrl + "login");
 		casAuthenticationEntryPoint.setServiceProperties(casServiceProperties);
 		casAuthenticationEntryPoint.setTargetUrlParameter("from");

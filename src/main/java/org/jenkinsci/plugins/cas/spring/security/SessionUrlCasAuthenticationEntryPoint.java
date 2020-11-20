@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.jasig.cas.client.util.CommonUtils;
 import org.jenkinsci.plugins.cas.CasSecurityRealm;
+import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 
 /**
  * CAS authentication entry point that will save a target URL request parameter
@@ -14,7 +15,7 @@ import org.jenkinsci.plugins.cas.CasSecurityRealm;
  * 
  * @author Fabien Crespel
  */
-public class CasAuthenticationEntryPoint extends org.springframework.security.cas.web.CasAuthenticationEntryPoint {
+public class SessionUrlCasAuthenticationEntryPoint extends CasAuthenticationEntryPoint {
 
 	private String targetUrlParameter;
 	private String targetUrlSessionAttribute;

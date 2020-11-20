@@ -1,9 +1,5 @@
 package org.jenkinsci.plugins.cas.protocols;
 
-import hudson.Extension;
-import hudson.Util;
-import hudson.model.Descriptor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +10,9 @@ import org.jasig.cas.client.validation.ProxyList;
 import org.jasig.cas.client.validation.TicketValidator;
 import org.jenkinsci.plugins.cas.CasProtocol;
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import hudson.Extension;
+import hudson.model.Descriptor;
 
 /**
  * CAS 2.0 protocol support.
@@ -33,9 +32,7 @@ public class Cas20Protocol extends CasProtocol {
 
 	@DataBoundConstructor
 	public Cas20Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute, Boolean proxyEnabled, Boolean proxyAllowAny, String proxyAllowList) {
-		this.authoritiesAttribute = Util.fixEmptyAndTrim(authoritiesAttribute);
-		this.fullNameAttribute = Util.fixEmptyAndTrim(fullNameAttribute);
-		this.emailAttribute = Util.fixEmptyAndTrim(emailAttribute);
+		super(authoritiesAttribute, fullNameAttribute, emailAttribute);
 		this.proxyEnabled = proxyEnabled;
 		this.proxyAllowAny = proxyAllowAny;
 		this.proxyAllowList = proxyAllowList;

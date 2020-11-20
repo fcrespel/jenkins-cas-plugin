@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.cas.spring.security;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jasig.cas.client.validation.Assertion;
@@ -22,40 +23,37 @@ public final class CasUserDetailsService extends AbstractCasAssertionUserDetails
 
 	public static final String NON_EXISTENT_PASSWORD_VALUE = "NO_PASSWORD";
 
-	private String[] attributes;
+	private final List<String> attributes = new ArrayList<>();
+	private final List<String> defaultAuthorities = new ArrayList<>();
+
 	private boolean convertToUpperCase = true;
-	private String[] defaultAuthorities;
 
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected UserDetails loadUserDetails(final Assertion assertion) {
-		final List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+		final List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
-		if (this.attributes != null) {
-			for (final String attribute : this.attributes) {
-				final Object value = assertion.getPrincipal().getAttributes().get(attribute);
+		for (final String attribute : this.attributes) {
+			final Object value = assertion.getPrincipal().getAttributes().get(attribute);
 
-				if (value == null) {
-					continue;
+			if (value == null) {
+				continue;
+			}
+
+			if (value instanceof List) {
+				final List list = (List) value;
+
+				for (final Object o : list) {
+					grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? o.toString().toUpperCase() : o.toString()));
 				}
 
-				if (value instanceof List) {
-					final List list = (List) value;
-
-					for (final Object o : list) {
-						grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? o.toString().toUpperCase() : o.toString()));
-					}
-
-				} else {
-					grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? value.toString().toUpperCase() : value.toString()));
-				}
+			} else {
+				grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? value.toString().toUpperCase() : value.toString()));
 			}
 		}
 
-		if (this.defaultAuthorities != null) {
-			for (final String authority : this.defaultAuthorities) {
-				grantedAuthorities.add(new SimpleGrantedAuthority(authority));
-			}
+		for (final String authority : this.defaultAuthorities) {
+			grantedAuthorities.add(new SimpleGrantedAuthority(authority));
 		}
 
 		return new User(assertion.getPrincipal().getName(), NON_EXISTENT_PASSWORD_VALUE, true, true, true, true, grantedAuthorities);
@@ -65,16 +63,17 @@ public final class CasUserDetailsService extends AbstractCasAssertionUserDetails
 	 * Get the attribute names used to extract granted authorities.
 	 * @return the attributes
 	 */
-	public String[] getAttributes() {
-		return attributes;
+	public List<String> getAttributes() {
+		return Collections.unmodifiableList(attributes);
 	}
 
 	/**
 	 * Set the attribute names used to extract granted authorities.
 	 * @param attributes the attributes to set
 	 */
-	public void setAttributes(String[] attributes) {
-		this.attributes = attributes;
+	public void setAttributes(List<String> attributes) {
+		this.attributes.clear();
+		this.attributes.addAll(attributes);
 	}
 
 	/**
@@ -97,15 +96,16 @@ public final class CasUserDetailsService extends AbstractCasAssertionUserDetails
 	 * Get default authorities to add to the user in any case.
 	 * @return default authorities
 	 */
-	public String[] getDefaultAuthorities() {
-		return defaultAuthorities;
+	public List<String> getDefaultAuthorities() {
+		return Collections.unmodifiableList(defaultAuthorities);
 	}
 
 	/**
 	 * Set default authorities to add to the user in any case.
 	 * @param defaultAuthorities default authorities
 	 */
-	public void setDefaultAuthorities(String[] defaultAuthorities) {
-		this.defaultAuthorities = defaultAuthorities;
+	public void setDefaultAuthorities(List<String> defaultAuthorities) {
+		this.defaultAuthorities.clear();
+		this.defaultAuthorities.addAll(defaultAuthorities);
 	}
 }

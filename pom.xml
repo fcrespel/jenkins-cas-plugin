@@ -93,7 +93,6 @@ THE SOFTWARE.
 		<jenkins.version>2.266</jenkins.version>
 		<cas-client.version>3.6.1</cas-client.version>
 		<bouncycastle-api.version>2.18</bouncycastle-api.version>
-		<spotbugs.failOnError>false</spotbugs.failOnError>
 	</properties>
 
 	<dependencyManagement>
