@@ -11,6 +11,13 @@ This is a [Jenkins](https://jenkins.io) plugin providing authentication with [CA
 
 The latest version is available for download from the Update Center and from the [Download Site](https://updates.jenkins.io/download/plugins/cas-plugin/).
 
+### Upgrade notice
+
+- Jenkins **2.266+** requires CAS plugin version **1.5.0+**
+- Jenkins **2.160** and **2.150.2 LTS** require CAS plugin version **1.4.3**
+
+In these cases, you will need to upgrade Jenkins and CAS plugin together to avoid issues. This means manually downloading and updating the `cas-plugin.hpi` file in your Jenkins `plugins` directory (rename to `cas-plugin.jpi` as needed).
+
 
 ## Building from source
 
@@ -42,7 +49,7 @@ Several protocols implemented by CAS are available in the **CAS Protocol** dropd
 
 - **CAS 1.0:** a text-based legacy protocol. Custom extensions may provide support for roles, which can be parsed with a Groovy script specified in **Roles Validation Script**.
 - **CAS 2.0:** a XML-based protocol. It supports **Proxy Tickets**, allowing external applications already secured with CAS to authenticate in Jenkins without requiring user input or password. Custom extensions may provide support for attributes.
-- **CAS 3.0:** a XML-based protocol. It supports **Proxy Tickets**, allowing external applications already secured with CAS to authenticate in Jenkins without requiring user input or password. It fully supports attributes out-of-the-box, without requiring custom extensions. **This is a recommended protocol for Apereo CAS Server 4.x and higher.**
+- **CAS 3.0:** a XML or JSON-based protocol. It supports **Proxy Tickets**, allowing external applications already secured with CAS to authenticate in Jenkins without requiring user input or password. It fully supports attributes out-of-the-box, without requiring custom extensions. **This is a recommended protocol for Apereo CAS Server 4.x and higher.**
 - **SAML 1.1:** a XML-based protocol. It fully supports attributes out-of-the-box, without requiring custom extensions. **This is a recommended protocol for Apereo CAS Server 3.x and higher.**
 
 [Attributes](https://apereo.github.io/cas/6.2.x/integration/Attribute-Release.html) are an easy (and recommended) way to add full name and email address information to an authenticated user, as well as roles/groups membership. CAS 1.0 response parsing with a custom Groovy script is made available as a legacy option for backward compatibility with the [CAS1 Plugin](https://wiki.jenkins.io/display/JENKINS/CAS1+Plugin).
