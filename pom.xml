@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (C) 2012-2016, Fabien Crespel
+Copyright (C) 2012-2020, Fabien Crespel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -91,6 +91,8 @@ THE SOFTWARE.
 		<gitHubRepo>jenkinsci/cas-plugin</gitHubRepo>
 		<java.level>8</java.level>
 		<jenkins.version>2.266</jenkins.version>
+		<cas-client.version>3.6.1</cas-client.version>
+		<bouncycastle-api.version>2.18</bouncycastle-api.version>
 		<spotbugs.failOnError>false</spotbugs.failOnError>
 	</properties>
 
@@ -98,14 +100,33 @@ THE SOFTWARE.
 		<dependencies>
 			<dependency>
 				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.249.x</artifactId>
-				<version>14</version>
+				<artifactId>bom-2.263.x</artifactId>
+				<version>18</version>
 				<scope>import</scope>
 				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.jenkins-ci.plugins</groupId>
+				<artifactId>bouncycastle-api</artifactId>
+				<version>${bouncycastle-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jasig.cas.client</groupId>
+				<artifactId>cas-client-core</artifactId>
+				<version>${cas-client.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jasig.cas.client</groupId>
+				<artifactId>cas-client-support-saml</artifactId>
+				<version>${cas-client.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>bouncycastle-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>mailer</artifactId>
@@ -117,7 +138,6 @@ THE SOFTWARE.
 		<dependency>
 			<groupId>org.jasig.cas.client</groupId>
 			<artifactId>cas-client-support-saml</artifactId>
-			<version>3.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
