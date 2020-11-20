@@ -12,38 +12,38 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.acegisecurity.Authentication;
-import org.acegisecurity.AuthenticationException;
-import org.acegisecurity.AuthenticationManager;
-import org.acegisecurity.BadCredentialsException;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
-import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.session.SessionMappingStorage;
 import org.jasig.cas.client.util.CommonUtils;
-import org.jenkinsci.plugins.cas.spring.security.AcegiAuthenticationManager;
-import org.jenkinsci.plugins.cas.spring.security.CasAuthentication;
+import org.jenkinsci.plugins.cas.spring.CasConfigurationContext;
+import org.jenkinsci.plugins.cas.spring.security.CasAuthenticationEntryPoint;
 import org.jenkinsci.plugins.cas.spring.security.CasRestAuthenticator;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.interceptor.RequirePOST;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.UrlUtils;
-import org.springframework.web.context.WebApplicationContext;
 
-import groovy.lang.Binding;
 import hudson.Extension;
 import hudson.Util;
 import hudson.model.Descriptor;
 import hudson.security.ChainedServletFilter;
 import hudson.security.SecurityRealm;
 import hudson.util.FormValidation;
-import hudson.util.spring.BeanBuilder;
 import jenkins.model.Jenkins;
 import jenkins.security.SecurityListener;
 
@@ -60,13 +60,15 @@ public class CasSecurityRealm extends SecurityRealm {
 	public static final String DEFAULT_FINISH_LOGIN_URL = "securityRealm/finishLogin";
 	public static final String DEFAULT_FAILED_LOGIN_URL = "securityRealm/failedLogin";
 
+	private static final Logger LOG = LoggerFactory.getLogger(CasSecurityRealm.class);
+
 	public final String casServerUrl;
 	public final CasProtocol casProtocol;
 	public final Boolean forceRenewal;
 	public final Boolean enableSingleSignOut;
 	public final Boolean enableRestApi;
 
-	private transient WebApplicationContext applicationContext;
+	private transient ApplicationContext applicationContext;
 
 	@Deprecated
 	public CasSecurityRealm(String casServerUrl, CasProtocol casProtocol, Boolean forceRenewal, Boolean enableSingleSignOut) {
@@ -142,34 +144,18 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * Create the Spring application context that will hold CAS filters.
 	 * @return Spring application context
 	 */
-	protected WebApplicationContext getApplicationContext() {
+	protected ApplicationContext getApplicationContext() {
 		if (this.applicationContext == null) {
-			Binding binding = new Binding();
-			binding.setVariable("securityRealm", this);
-			binding.setVariable("casProtocol", this.casProtocol);
-
-			BeanBuilder builder = new BeanBuilder(getClass().getClassLoader());
-			builder.parse(getClass().getClassLoader().getResourceAsStream(getClass().getName().replace('.', '/') + ".groovy"), binding);
-
-			this.applicationContext = builder.createApplicationContext();
+			LOG.debug("Creating CAS ApplicationContext");
+			CasSecurityRealm casSecurityRealm = this;
+			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+			context.registerBean(CasSecurityRealm.class, () -> casSecurityRealm);
+			context.registerBean(CasProtocol.class, () -> casSecurityRealm.casProtocol);
+			context.register(CasConfigurationContext.class);
+			context.refresh();
+			this.applicationContext = context;
 		}
 		return this.applicationContext;
-	}
-
-	/**
-	 * Get or create the CAS REST client for API authentication.
-	 * @return CAS REST authenticator
-	 */
-	protected CasRestAuthenticator getCasRestAuthenticator() {
-		return (CasRestAuthenticator) getApplicationContext().getBean("casRestAuthenticator");
-	}
-
-	/**
-	 * Check if the CAS REST API is enabled.
-	 * @return true if enabled
-	 */
-	protected boolean isRestApiEnabled() {
-		return Boolean.TRUE.equals(enableRestApi);
 	}
 
 	// ~ SecurityRealm implementation ===================================================================================
@@ -188,7 +174,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * @return CAS logout URL
 	 */
 	@Override
-	protected String getPostLogOutUrl(StaplerRequest req, Authentication auth) {
+	protected String getPostLogOutUrl2(StaplerRequest req, Authentication auth) {
 		StringBuilder logoutUrlBuilder = new StringBuilder(casServerUrl);
 		logoutUrlBuilder.append("logout?service=");
 		try {
@@ -211,8 +197,8 @@ public class CasSecurityRealm extends SecurityRealm {
 			public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 				if (authentication instanceof AnonymousAuthenticationToken) {
 					return authentication;
-				} else if ((authentication instanceof UsernamePasswordAuthenticationToken) && isRestApiEnabled()) {
-					return new AcegiAuthenticationManager(getCasRestAuthenticator()).authenticate(authentication);
+				} else if ((authentication instanceof UsernamePasswordAuthenticationToken) && Boolean.TRUE.equals(enableRestApi)) {
+					return getApplicationContext().getBean(CasRestAuthenticator.class).authenticate(authentication);
 				} else {
 					throw new BadCredentialsException("Unexpected authentication type: " + authentication);
 				}
@@ -222,15 +208,15 @@ public class CasSecurityRealm extends SecurityRealm {
 
 	/**
 	 * Build the filter that will validate the service ticket returned by CAS.
-	 * This filter, defined in the CasSecurityRealm.groovy application context,
-	 * will wrap the original filter chain from Jenkins to preserve support for
-	 * API token authentication (among other features).
+	 * This filter will also wrap the original filter chain from Jenkins to
+	 * preserve support for API token authentication (among other features).
 	 * @return CAS filter
 	 */
 	@Override
 	public Filter createFilter(FilterConfig filterConfig) {
+		LOG.debug("Creating CAS authentication filter");
 		Filter defaultFilter = super.createFilter(filterConfig);
-		Filter casFilter = (Filter) getApplicationContext().getBean("casFilter");
+		Filter casFilter = getApplicationContext().getBean("casFilter", ChainedServletFilter.class);
 		return new ChainedServletFilter(casFilter, defaultFilter);
 	}
 
@@ -245,46 +231,37 @@ public class CasSecurityRealm extends SecurityRealm {
 	 */
 	@Override
 	public void doLogout(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
-		// Clear Spring Security context
-		org.springframework.security.core.context.SecurityContextHolder.clearContext();
-
 		// Remove session from CAS single sign-out storage
 		HttpSession session = req.getSession(false);
 		if (session != null) {
-			SessionMappingStorage sessionMappingStorage = (SessionMappingStorage) getApplicationContext().getBean("casSessionMappingStorage");
-			sessionMappingStorage.removeBySessionById(session.getId());
+			getApplicationContext().getBean(SessionMappingStorage.class).removeBySessionById(session.getId());
 		}
-
 		super.doLogout(req, rsp);
 	}
 
 	/**
-	 * The login process starts from here, using the CasAuthenticationEntryPoint
-	 * defined in the CasSecurityRealm.groovy application context.
+	 * The login process starts from here, using the CasAuthenticationEntryPoint.
 	 * @param req request
 	 * @param rsp response
 	 * @throws IOException
 	 * @throws ServletException
 	 */
 	public void doCommenceLogin(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
-		AuthenticationEntryPoint entryPoint = (AuthenticationEntryPoint) getApplicationContext().getBean("casAuthenticationEntryPoint");
-		entryPoint.commence(req, rsp, null);
+		LOG.debug("Redirecting to CAS for authentication");
+		getApplicationContext().getBean(CasAuthenticationEntryPoint.class).commence(req, rsp, null);
 	}
 
 	/**
-	 * The login process finishes here, by mapping the Spring Security
-	 * authentication back to Acegi and by firing the authenticated event.
+	 * The login process finishes here, by firing the authenticated event.
 	 * @param req request
 	 * @param rsp response
 	 */
 	public void doFinishLogin(StaplerRequest req, StaplerResponse rsp) {
-		org.springframework.security.core.Authentication authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		LOG.debug("Finishing CAS login with authentication={}", authentication);
+		req.getSession(); // Force session creation
 		if (authentication instanceof CasAuthenticationToken) {
-			org.springframework.security.core.context.SecurityContextHolder.clearContext();
-			CasAuthenticationToken casToken = (CasAuthenticationToken) authentication;
-			CasAuthentication casAuth = CasAuthentication.newInstance(casToken);
-			SecurityContextHolder.getContext().setAuthentication(casAuth);
-			SecurityListener.fireAuthenticated(casAuth.getUserDetails());
+			SecurityListener.fireAuthenticated2(((CasAuthenticationToken) authentication).getUserDetails());
 		}
 	}
 

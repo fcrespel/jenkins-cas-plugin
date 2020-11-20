@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-import org.springframework.context.ApplicationEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
@@ -14,15 +15,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import hudson.tasks.Mailer;
 
 /**
- * Listener for successful CAS authentication events, that maps Spring Security
- * Authentication to Acegi Security and syncs attributes with the corresponding Jenkins User.
+ * Listener for successful CAS authentication events, that syncs attributes
+ * with the corresponding Jenkins User.
  * 
  * @author Fabien Crespel
  */
-public class CasEventListener implements ApplicationListener {
+public class CasEventListener implements ApplicationListener<AuthenticationSuccessEvent> {
 
 	public static final String DEFAULT_FULL_NAME_ATTRIBUTE = "cn";
 	public static final String DEFAULT_EMAIL_ATTRIBUTE = "mail";
+
+	private static final Logger LOG = LoggerFactory.getLogger(CasEventListener.class);
 
 	private String fullNameAttribute = DEFAULT_FULL_NAME_ATTRIBUTE;
 	private String emailAttribute = DEFAULT_EMAIL_ATTRIBUTE;
@@ -31,10 +34,8 @@ public class CasEventListener implements ApplicationListener {
 	 * Handle an application event.
 	 * @param event the event to respond to
 	 */
-	public void onApplicationEvent(ApplicationEvent event) {
-		if (event instanceof AuthenticationSuccessEvent) {
-			onSuccessfulAuthentication(((AuthenticationSuccessEvent) event).getAuthentication());
-		}
+	public void onApplicationEvent(AuthenticationSuccessEvent event) {
+		onSuccessfulAuthentication(event.getAuthentication());
 	}
 
 	/**
@@ -43,8 +44,10 @@ public class CasEventListener implements ApplicationListener {
 	 * is invoked and before Spring security context is updated.
 	 * @param authentication the successful authentication object
 	 */
-	protected void onSuccessfulAuthentication(Authentication authentication) {
-		// Set Spring security context early to allow Acegi mapping in CasSecurityRealm.doFinishLogin()
+	public void onSuccessfulAuthentication(Authentication authentication) {
+		LOG.debug("Successful authentication={}", authentication);
+
+		// Set Spring security context early (before the filter chain continues)
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		// Map user attributes
@@ -72,17 +75,20 @@ public class CasEventListener implements ApplicationListener {
 		}
 
 		// Retrieve or create the Jenkins user
-		hudson.model.User user = hudson.model.User.get(casToken.getName());
+		LOG.debug("Syncing CAS user with Jenkins user '{}'", casToken.getName());
+		hudson.model.User user = hudson.model.User.getOrCreateByIdOrFullName(casToken.getName());
 
 		// Sync the full name
 		String fullName = getAttributeValue(casToken, getFullNameAttribute());
 		if (fullName != null) {
+			LOG.debug("Setting user '{}' full name to '{}'", casToken.getName(), fullName);
 			user.setFullName(fullName);
 		}
 
 		// Sync the email address
 		String email = getAttributeValue(casToken, getEmailAttribute());
 		if (email != null) {
+			LOG.debug("Setting user '{}' email address to '{}'", casToken.getName(), email);
 			user.addProperty(new Mailer.UserProperty(email));
 		}
 
