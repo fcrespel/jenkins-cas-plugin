@@ -2,9 +2,11 @@
 
 ## [Unreleased]
 
+- Compatibility with Jenkins 2.266+ (replacement of Acegi Security with Spring Security, see [JEP-227](https://github.com/jenkinsci/jep/tree/master/jep/227)).
+
 ## [1.4.3] - 2019-01-21
 
-- Fixed login redirect loop caused by changes in Jenkins 2.160 and 2.150.2 LTS (SECURITY-901, see [2019-01-16 security advisory](https://jenkins.io/security/advisory/2019-01-16/#SECURITY-901))
+- Fixed login redirect loop caused by changes in Jenkins 2.160 and 2.150.2 LTS (SECURITY-901, see [2019-01-16 security advisory](https://jenkins.io/security/advisory/2019-01-16/#SECURITY-901)).
 
 ## [1.4.2] - 2018-06-04
 
