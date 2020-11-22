@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.0] - 2020-11-22
+
 - Compatibility with Jenkins 2.266 and higher (replacement of Acegi Security with Spring Security, see [JEP-227](https://github.com/jenkinsci/jep/tree/master/jep/227)).
 - Incompatibility with Jenkins 2.265 and lower (for the reason above), please make sure to upgrade CAS plugin and Jenkins together.
 - Added support for CAS 3.0 JSON protocol format.
@@ -61,7 +63,8 @@
 - Single Sign-Out support
 - Jenkins API Token support (no conflict)
 
-[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.3...HEAD
+[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.5.0...HEAD
+[1.5.0]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.3...cas-plugin-1.5.0
 [1.4.3]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.2...cas-plugin-1.4.3
 [1.4.2]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.1...cas-plugin-1.4.2
 [1.4.1]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.0...cas-plugin-1.4.1
