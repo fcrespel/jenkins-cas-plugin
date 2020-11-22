@@ -29,11 +29,11 @@ THE SOFTWARE.
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
 		<version>4.12</version>
-		<relativePath/>
+		<relativePath />
 	</parent>
 
 	<artifactId>cas-plugin</artifactId>
-	<version>${revision}${changelist}</version>
+	<version>1.5.0</version>
 	<packaging>hpi</packaging>
 	<name>CAS Plugin</name>
 	<url>https://github.com/jenkinsci/cas-plugin</url>
@@ -42,7 +42,7 @@ THE SOFTWARE.
 		<connection>scm:git:ssh://github.com/${gitHubRepo}.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/${gitHubRepo}.git</developerConnection>
 		<url>https://github.com/${gitHubRepo}</url>
-		<tag>${scmTag}</tag>
+		<tag>cas-plugin-1.5.0</tag>
 	</scm>
 
 	<developers>
