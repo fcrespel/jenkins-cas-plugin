@@ -30,9 +30,14 @@ public class Cas20Protocol extends CasProtocol {
 		this(authoritiesAttribute, fullNameAttribute, emailAttribute, false, true, null);
 	}
 
-	@DataBoundConstructor
+	@Deprecated
 	public Cas20Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute, Boolean proxyEnabled, Boolean proxyAllowAny, String proxyAllowList) {
-		super(authoritiesAttribute, fullNameAttribute, emailAttribute);
+		this(authoritiesAttribute, fullNameAttribute, emailAttribute, null, proxyEnabled, proxyAllowAny, proxyAllowList);
+	}
+
+	@DataBoundConstructor
+	public Cas20Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute, String customValidationParams, Boolean proxyEnabled, Boolean proxyAllowAny, String proxyAllowList) {
+		super(authoritiesAttribute, fullNameAttribute, emailAttribute, customValidationParams);
 		this.proxyEnabled = proxyEnabled;
 		this.proxyAllowAny = proxyAllowAny;
 		this.proxyAllowList = proxyAllowList;
@@ -42,6 +47,7 @@ public class Cas20Protocol extends CasProtocol {
 	public TicketValidator createTicketValidator(String casServerUrl) {
 		if (this.proxyEnabled != null && this.proxyEnabled) {
 			Cas20ProxyTicketValidator ptv = new Cas20ProxyTicketValidator(casServerUrl);
+			ptv.setCustomParameters(getCustomValidationParamsMap());
 			ptv.setAcceptAnyProxy(this.proxyAllowAny);
 			String[] proxyChain = StringUtils.split(this.proxyAllowList, '\n');
 			if (proxyChain != null && proxyChain.length > 0) {
@@ -51,7 +57,9 @@ public class Cas20Protocol extends CasProtocol {
 			}
 			return ptv;
 		} else {
-			return new Cas20ServiceTicketValidator(casServerUrl);
+			Cas20ServiceTicketValidator stv = new Cas20ServiceTicketValidator(casServerUrl);
+			stv.setCustomParameters(getCustomValidationParamsMap());
+			return stv;
 		}
 	}
 

@@ -15,6 +15,9 @@
     <f:entry title="${%emailAttribute}" field="emailAttribute">
       <f:textbox default="mail" />
     </f:entry>
+    <f:entry title="${%customValidationParams}" field="customValidationParams">
+      <f:textbox default="" />
+    </f:entry>
     <f:entry title="${%proxySettings}">
       <table>
         <f:optionalBlock title="${%proxyEnabled}" field="proxyEnabled" inline="true">
