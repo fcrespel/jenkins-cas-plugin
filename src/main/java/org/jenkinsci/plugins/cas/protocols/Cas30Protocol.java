@@ -1,7 +1,9 @@
 package org.jenkinsci.plugins.cas.protocols;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.validation.Cas30ProxyTicketValidator;
@@ -49,14 +51,17 @@ public class Cas30Protocol extends CasProtocol {
 
 	@Override
 	public TicketValidator createTicketValidator(String casServerUrl) {
+		Map<String, String> customParams = new HashMap<>();
+		customParams.putAll(getCustomValidationParamsMap());
 		if (this.proxyEnabled != null && this.proxyEnabled) {
 			Cas30ProxyTicketValidator ptv;
 			if (Boolean.TRUE.equals(this.jsonEnabled)) {
 				ptv = new Cas30JsonProxyTicketValidator(casServerUrl);
+				customParams.put("format", "JSON");
 			} else {
 				ptv = new Cas30ProxyTicketValidator(casServerUrl);
 			}
-			ptv.setCustomParameters(getCustomValidationParamsMap());
+			ptv.setCustomParameters(customParams);
 			ptv.setAcceptAnyProxy(this.proxyAllowAny);
 			String[] proxyChain = StringUtils.split(this.proxyAllowList, '\n');
 			if (proxyChain != null && proxyChain.length > 0) {
@@ -69,10 +74,11 @@ public class Cas30Protocol extends CasProtocol {
 			Cas30ServiceTicketValidator stv;
 			if (Boolean.TRUE.equals(this.jsonEnabled)) {
 				stv = new Cas30JsonServiceTicketValidator(casServerUrl);
+				customParams.put("format", "JSON");
 			} else {
 				stv = new Cas30ServiceTicketValidator(casServerUrl);
 			}
-			stv.setCustomParameters(getCustomValidationParamsMap());
+			stv.setCustomParameters(customParams);
 			return stv;
 		}
 	}
