@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Added option to customize validation URL parameters in advanced protocol configuration.
+- Fixed handling of empty attributes.
 
 ## [1.5.0] - 2020-11-22
 

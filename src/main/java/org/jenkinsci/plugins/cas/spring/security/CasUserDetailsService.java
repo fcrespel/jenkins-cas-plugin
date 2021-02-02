@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 
 /**
  * Populates the {@link org.springframework.security.core.GrantedAuthority}s for a user by reading a list of attributes that were returned as
@@ -44,11 +45,17 @@ public final class CasUserDetailsService extends AbstractCasAssertionUserDetails
 				final List list = (List) value;
 
 				for (final Object o : list) {
-					grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? o.toString().toUpperCase() : o.toString()));
+					String authority = o.toString();
+					if (StringUtils.hasText(authority)) {
+						grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? authority.toUpperCase() : authority));
+					}
 				}
 
 			} else {
-				grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? value.toString().toUpperCase() : value.toString()));
+				String authority = value.toString();
+				if (StringUtils.hasText(authority)) {
+					grantedAuthorities.add(new SimpleGrantedAuthority(this.convertToUpperCase ? authority.toUpperCase() : authority));
+				}
 			}
 		}
 
