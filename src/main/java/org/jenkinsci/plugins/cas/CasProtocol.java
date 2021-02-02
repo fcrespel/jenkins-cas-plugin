@@ -1,7 +1,11 @@
 package org.jenkinsci.plugins.cas;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.jasig.cas.client.validation.TicketValidator;
@@ -15,8 +19,8 @@ import hudson.model.Descriptor;
 import jenkins.model.Jenkins;
 
 /**
- * CAS protocol extension point. The protocol determines how to validate
- * a server response, and may define specific configuration options.
+ * CAS protocol extension point. The protocol determines how to validate a
+ * server response, and may define specific configuration options.
  * 
  * @author Fabien Crespel
  */
@@ -25,9 +29,11 @@ public abstract class CasProtocol extends AbstractDescribableImpl<CasProtocol> i
 	public final String authoritiesAttribute;
 	public final String fullNameAttribute;
 	public final String emailAttribute;
+	public final String customValidationParams;
 
 	protected transient String artifactParameter = null;
 	protected transient List<String> authoritiesAttributes = null;
+	protected transient Map<String, String> customValidationParamsMap = null;
 
 	protected CasProtocol() {
 		this(null, null, null);
@@ -38,9 +44,15 @@ public abstract class CasProtocol extends AbstractDescribableImpl<CasProtocol> i
 	}
 
 	protected CasProtocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute) {
+		this(authoritiesAttribute, fullNameAttribute, emailAttribute, null);
+	}
+
+	protected CasProtocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute,
+			String customValidationParams) {
 		this.authoritiesAttribute = Util.fixEmptyAndTrim(authoritiesAttribute);
 		this.fullNameAttribute = Util.fixEmptyAndTrim(fullNameAttribute);
 		this.emailAttribute = Util.fixEmptyAndTrim(emailAttribute);
+		this.customValidationParams = Util.fixEmptyAndTrim(customValidationParams);
 	}
 
 	/**
@@ -82,6 +94,37 @@ public abstract class CasProtocol extends AbstractDescribableImpl<CasProtocol> i
 	 */
 	public String getEmailAttribute() {
 		return emailAttribute;
+	}
+
+	/**
+	 * @return the customValidationParams
+	 */
+	public String getCustomValidationParams() {
+		return customValidationParams;
+	}
+
+	/**
+	 * @return the customValidationParamsMap
+	 */
+	public Map<String, String> getCustomValidationParamsMap() {
+		if (customValidationParamsMap == null) {
+			Map<String, String> map = new HashMap<>();
+			if (customValidationParams != null) {
+				String[] parts = StringUtils.split(customValidationParams, "&");
+				for (String part : parts) {
+					String[] keyValue = StringUtils.split(part, "=");
+					if (keyValue.length == 2) {
+						try {
+							map.put(keyValue[0], URLDecoder.decode(keyValue[1], "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new RuntimeException(e);
+						}
+					}
+				}
+			}
+			customValidationParamsMap = map;
+		}
+		return customValidationParamsMap;
 	}
 
 	/**

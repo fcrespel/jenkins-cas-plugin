@@ -19,9 +19,14 @@ public class Saml11Protocol extends CasProtocol {
 
 	public final int tolerance;
 
-	@DataBoundConstructor
+	@Deprecated
 	public Saml11Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute, int tolerance) {
-		super(authoritiesAttribute, fullNameAttribute, emailAttribute);
+		this(authoritiesAttribute, fullNameAttribute, emailAttribute, null, tolerance);
+	}
+
+	@DataBoundConstructor
+	public Saml11Protocol(String authoritiesAttribute, String fullNameAttribute, String emailAttribute, String customValidationParams, int tolerance) {
+		super(authoritiesAttribute, fullNameAttribute, emailAttribute, customValidationParams);
 		this.tolerance = tolerance;
 	}
 
@@ -33,6 +38,7 @@ public class Saml11Protocol extends CasProtocol {
 	@Override
 	public TicketValidator createTicketValidator(String casServerUrl) {
 		Saml11TicketValidator ticketValidator = new Saml11TicketValidator(casServerUrl);
+		ticketValidator.setCustomParameters(getCustomValidationParamsMap());
 		ticketValidator.setTolerance(tolerance);
 		return ticketValidator;
 	}

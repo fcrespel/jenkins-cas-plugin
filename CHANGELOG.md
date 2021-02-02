@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added option to customize validation URL parameters in advanced protocol configuration.
+
 ## [1.5.0] - 2020-11-22
 
 - Compatibility with Jenkins 2.266 and higher (replacement of Acegi Security with Spring Security, see [JEP-227](https://github.com/jenkinsci/jep/tree/master/jep/227)).
