@@ -11,6 +11,7 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 
 import hudson.tasks.Mailer;
 
@@ -80,14 +81,14 @@ public class CasEventListener implements ApplicationListener<AuthenticationSucce
 
 		// Sync the full name
 		String fullName = getAttributeValue(casToken, getFullNameAttribute());
-		if (fullName != null) {
+		if (StringUtils.hasText(fullName)) {
 			LOG.debug("Setting user '{}' full name to '{}'", casToken.getName(), fullName);
 			user.setFullName(fullName);
 		}
 
 		// Sync the email address
 		String email = getAttributeValue(casToken, getEmailAttribute());
-		if (email != null) {
+		if (StringUtils.hasText(email)) {
 			LOG.debug("Setting user '{}' email address to '{}'", casToken.getName(), email);
 			user.addProperty(new Mailer.UserProperty(email));
 		}
