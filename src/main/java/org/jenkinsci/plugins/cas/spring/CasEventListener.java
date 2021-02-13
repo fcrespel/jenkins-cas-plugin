@@ -103,7 +103,7 @@ public class CasEventListener implements ApplicationListener<AuthenticationSucce
 	/**
 	 * Replace placeholders in an attribute template string.
 	 * @param authToken CAS authentication token
-	 * @param attributeName attribute template containing '{{placeholder}}' or plain attribute name
+	 * @param attributeTemplate attribute template containing '{{placeholder}}' or plain attribute name
 	 * @return attribute value or null if not found
 	 */
 	protected String parseAttributeTemplate(CasAuthenticationToken authToken, String attributeTemplate) {
