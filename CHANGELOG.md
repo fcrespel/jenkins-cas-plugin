@@ -4,6 +4,7 @@
 
 - Added option to customize validation URL parameters in advanced protocol configuration.
 - Fixed handling of empty attributes.
+- Allow using `{{attribute}}` placeholders in Full Name and Email Attribute configuration (e.g. `{{firstName}} {{lastName}}`).
 
 ## [1.5.0] - 2020-11-22
 

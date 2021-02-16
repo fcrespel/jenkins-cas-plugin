@@ -3,6 +3,8 @@ package org.jenkinsci.plugins.cas.spring;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,7 @@ public class CasEventListener implements ApplicationListener<AuthenticationSucce
 
 	private String fullNameAttribute = DEFAULT_FULL_NAME_ATTRIBUTE;
 	private String emailAttribute = DEFAULT_EMAIL_ATTRIBUTE;
+	private Pattern placeholderPattern = Pattern.compile("\\{\\{[a-zA-Z0-9._-]+\\}\\}");
 
 	/**
 	 * Handle an application event.
@@ -80,14 +83,14 @@ public class CasEventListener implements ApplicationListener<AuthenticationSucce
 		hudson.model.User user = hudson.model.User.getOrCreateByIdOrFullName(casToken.getName());
 
 		// Sync the full name
-		String fullName = getAttributeValue(casToken, getFullNameAttribute());
+		String fullName = parseAttributeTemplate(casToken, getFullNameAttribute());
 		if (StringUtils.hasText(fullName)) {
 			LOG.debug("Setting user '{}' full name to '{}'", casToken.getName(), fullName);
 			user.setFullName(fullName);
 		}
 
 		// Sync the email address
-		String email = getAttributeValue(casToken, getEmailAttribute());
+		String email = parseAttributeTemplate(casToken, getEmailAttribute());
 		if (StringUtils.hasText(email)) {
 			LOG.debug("Setting user '{}' email address to '{}'", casToken.getName(), email);
 			user.addProperty(new Mailer.UserProperty(email));
@@ -98,23 +101,43 @@ public class CasEventListener implements ApplicationListener<AuthenticationSucce
 	}
 
 	/**
+	 * Replace placeholders in an attribute template string.
+	 * @param authToken CAS authentication token
+	 * @param attributeTemplate attribute template containing '{{placeholder}}' or plain attribute name
+	 * @return attribute value or null if not found
+	 */
+	protected String parseAttributeTemplate(CasAuthenticationToken authToken, String attributeTemplate) {
+		if (StringUtils.hasText(attributeTemplate)) {
+			if (attributeTemplate.contains("{{")) {
+				StringBuffer sb = new StringBuffer();
+				Matcher m = placeholderPattern.matcher(attributeTemplate);
+				while (m.find()) {
+					String attrName = m.group();
+					String attrValue = getAttributeValue(authToken, attrName.substring(2, attrName.length() - 2));
+					m.appendReplacement(sb, StringUtils.hasText(attrValue) ? attrValue : "");
+				}
+				m.appendTail(sb);
+				return sb.toString();
+			} else {
+				return getAttributeValue(authToken, attributeTemplate);
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Retrieve an attribute's value from a CAS authentication token.
 	 * @param authToken CAS authentication token
 	 * @param attributeName attribute name
 	 * @return attribute value or null if not found
 	 */
-	@SuppressWarnings("rawtypes")
 	protected String getAttributeValue(CasAuthenticationToken authToken, String attributeName) {
-		if (authToken != null && authToken.getAssertion() != null &&
-			authToken.getAssertion().getPrincipal() != null &&
-			authToken.getAssertion().getPrincipal().getAttributes() != null &&
-			attributeName != null) {
-
-			Map attributes = authToken.getAssertion().getPrincipal().getAttributes();
+		if (StringUtils.hasText(attributeName)) {
+			Map<String, Object> attributes = authToken.getAssertion().getPrincipal().getAttributes();
 			Object attribute = attributes.get(attributeName);
 			if (attribute != null) {
 				if (attribute instanceof Collection) {
-					return ((Collection) attribute).iterator().next().toString();
+					return ((Collection<?>) attribute).iterator().next().toString();
 				} else {
 					return attribute.toString();
 				}
