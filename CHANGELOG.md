@@ -2,9 +2,11 @@
 
 ## [Unreleased]
 
+## [1.6.0] - 2021-02-18
+
 - Added option to customize validation URL parameters in advanced protocol configuration.
+- Allow using `{{attribute}}` placeholders in Full Name and Email Attribute configuration (e.g. `{{firstName}} {{lastName}}` or `{{uid}}@example.com`).
 - Fixed handling of empty attributes.
-- Allow using `{{attribute}}` placeholders in Full Name and Email Attribute configuration (e.g. `{{firstName}} {{lastName}}`).
 
 ## [1.5.0] - 2020-11-22
 
@@ -67,7 +69,8 @@
 - Single Sign-Out support
 - Jenkins API Token support (no conflict)
 
-[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.5.0...HEAD
+[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.0...HEAD
+[1.6.0]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.5.0...cas-plugin-1.6.0
 [1.5.0]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.3...cas-plugin-1.5.0
 [1.4.3]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.2...cas-plugin-1.4.3
 [1.4.2]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.1...cas-plugin-1.4.2
