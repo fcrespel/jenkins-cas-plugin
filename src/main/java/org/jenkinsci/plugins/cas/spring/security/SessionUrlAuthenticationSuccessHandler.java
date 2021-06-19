@@ -7,6 +7,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.util.StringUtils;
 
+import hudson.Util;
+
 /**
  * <tt>AuthenticationSuccessHandler</tt> that behaves like <tt>SimpleUrlAuthenticationSuccessHandler</tt>,
  * but also looks for a configurable session attribute holding the target URL to redirect to.
@@ -39,15 +41,21 @@ public class SessionUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticat
 		}
 
 		if (isAlwaysUseDefaultTargetUrl() || !StringUtils.hasText(targetUrl) || (getTargetUrlParameter() != null && StringUtils.hasText(request.getParameter(getTargetUrlParameter())))) {
-			return super.determineTargetUrl(request, response);
+			targetUrl = super.determineTargetUrl(request, response);
+		} else {
+			logger.debug("Found targetUrlSessionAttribute in request: " + targetUrl);
 		}
-
-		logger.debug("Found targetUrlSessionAttribute in request: " + targetUrl);
 
 		// URL returned from determineTargetUrl() is resolved against the context path,
 		// whereas the "from" URL is resolved against the top of the website, so adjust this.
-		if (targetUrl.startsWith(request.getContextPath()))
-			return targetUrl.substring(request.getContextPath().length());
+		if (targetUrl.startsWith(request.getContextPath())) {
+			targetUrl = targetUrl.substring(request.getContextPath().length());
+		}
+
+		if (!Util.isSafeToRedirectTo(targetUrl)) {
+			logger.debug("Target URL is not safe to redirect to and will be ignored: " + targetUrl);
+			targetUrl = getDefaultTargetUrl();
+		}
 
 		return targetUrl;
 	}

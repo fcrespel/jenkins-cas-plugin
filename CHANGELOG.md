@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fixed security issue (SECURITY-2387).
+
 ## [1.6.0] - 2021-02-18
 
 - Added option to customize validation URL parameters in advanced protocol configuration.
