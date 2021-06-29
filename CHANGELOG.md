@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.6.1] - 2021-06-29
+
 - Fixed security issue (SECURITY-2387).
 
 ## [1.6.0] - 2021-02-18
