@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+## [1.6.2] - 2022-05-29
+
+- Added explicit dependency on JAXB plugin (JENKINS-68455).
+
 ## [1.6.1] - 2021-06-29
 
-- Fixed security issue (SECURITY-2387).
+- Fixed open redirect vulnerability (SECURITY-2387, see [2021-06-30 security advisory](https://www.jenkins.io/security/advisory/2021-06-30/#SECURITY-2387)).
 
 ## [1.6.0] - 2021-02-18
 
@@ -73,7 +77,9 @@
 - Single Sign-Out support
 - Jenkins API Token support (no conflict)
 
-[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.0...HEAD
+[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.2...HEAD
+[1.6.2]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.1...cas-plugin-1.6.2
+[1.6.1]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.0...cas-plugin-1.6.1
 [1.6.0]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.5.0...cas-plugin-1.6.0
 [1.5.0]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.3...cas-plugin-1.5.0
 [1.4.3]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.4.2...cas-plugin-1.4.3
