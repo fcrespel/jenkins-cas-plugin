@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (C) 2012-2020, Fabien Crespel
+Copyright (C) 2012-2022, Fabien Crespel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -93,6 +93,7 @@ THE SOFTWARE.
 		<jenkins.version>2.266</jenkins.version>
 		<cas-client.version>3.6.1</cas-client.version>
 		<bouncycastle-api.version>2.18</bouncycastle-api.version>
+		<jaxb.version>2.3.6-1</jaxb.version>
 	</properties>
 
 	<dependencyManagement>
@@ -110,6 +111,11 @@ THE SOFTWARE.
 				<version>${bouncycastle-api.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>io.jenkins.plugins</groupId>
+				<artifactId>jaxb</artifactId>
+				<version>${jaxb.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.jasig.cas.client</groupId>
 				<artifactId>cas-client-core</artifactId>
 				<version>${cas-client.version}</version>
@@ -125,6 +131,10 @@ THE SOFTWARE.
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>bouncycastle-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jenkins.plugins</groupId>
+			<artifactId>jaxb</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
