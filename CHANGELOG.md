@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fixed security issue (SECURITY-3000).
+
 ## [1.6.2] - 2022-05-29
 
 - Added explicit dependency on JAXB plugin (JENKINS-68455).

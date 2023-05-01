@@ -10,6 +10,7 @@ import org.jasig.cas.client.validation.TicketValidator;
 import org.jenkinsci.plugins.cas.CasProtocol;
 import org.jenkinsci.plugins.cas.CasSecurityRealm;
 import org.jenkinsci.plugins.cas.spring.security.CasRestAuthenticator;
+import org.jenkinsci.plugins.cas.spring.security.CasSessionFixationProtectionStrategy;
 import org.jenkinsci.plugins.cas.spring.security.CasSingleSignOutFilter;
 import org.jenkinsci.plugins.cas.spring.security.CasUserDetailsService;
 import org.jenkinsci.plugins.cas.spring.security.DynamicServiceAuthenticationDetailsSource;
@@ -143,12 +144,13 @@ public class CasConfigurationContext {
 	}
 
 	@Bean
-	public CasAuthenticationFilter casAuthenticationFilter(AuthenticationManager casAuthenticationManager, DynamicServiceAuthenticationDetailsSource casAuthenticationDetailsSource, ServiceProperties casServiceProperties) {
+	public CasAuthenticationFilter casAuthenticationFilter(AuthenticationManager casAuthenticationManager, DynamicServiceAuthenticationDetailsSource casAuthenticationDetailsSource, ServiceProperties casServiceProperties, SessionMappingStorage casSessionMappingStorage) {
 		CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
 		casAuthenticationFilter.setFilterProcessesUrl("/" + CasSecurityRealm.getFinishLoginUrl());
 		casAuthenticationFilter.setAuthenticationManager(casAuthenticationManager);
 		casAuthenticationFilter.setAuthenticationDetailsSource(casAuthenticationDetailsSource);
 		casAuthenticationFilter.setServiceProperties(casServiceProperties);
+		casAuthenticationFilter.setSessionAuthenticationStrategy(new CasSessionFixationProtectionStrategy(casSessionMappingStorage));
 		casAuthenticationFilter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/" + CasSecurityRealm.getFailedLoginUrl()));
 		casAuthenticationFilter.setAuthenticationSuccessHandler(new SessionUrlAuthenticationSuccessHandler("/"));
 		casAuthenticationFilter.setContinueChainBeforeSuccessfulAuthentication(true); // Required to reach CasSecurityRealm.doFinishLogin()
