@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 import hudson.Util;
 
 /**
- * <tt>AuthenticationSuccessHandler</tt> that behaves like <tt>SimpleUrlAuthenticationSuccessHandler</tt>,
+ * AuthenticationSuccessHandler that behaves like SimpleUrlAuthenticationSuccessHandler,
  * but also looks for a configurable session attribute holding the target URL to redirect to.
  * 
  * @author Fabien Crespel
@@ -22,7 +22,7 @@ public class SessionUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticat
 	private String targetUrlSessionAttribute = DEFAULT_TARGET_URL_SESSION_ATTRIBUTE;
 
 	/**
-	 * Constructor which sets the <tt>defaultTargetUrl</tt> property of the base class.
+	 * Constructor which sets the defaultTargetUrl property of the base class.
 	 * @param defaultTargetUrl the URL to which the user should be redirected on successful authentication.
 	 */
 	public SessionUrlAuthenticationSuccessHandler(String defaultTargetUrl) {

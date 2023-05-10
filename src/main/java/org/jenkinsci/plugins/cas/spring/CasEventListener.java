@@ -68,7 +68,7 @@ public class CasEventListener implements ApplicationListener<AuthenticationSucce
 	/**
 	 * Sync user attributes with a CAS authentication token.
 	 * @param casToken CAS authentication token
-	 * @throws IOException
+	 * @throws IOException I/O error when persisting user
 	 */
 	protected void syncUserAttributes(CasAuthenticationToken casToken) throws IOException {
 		if (casToken.getAssertion() == null ||

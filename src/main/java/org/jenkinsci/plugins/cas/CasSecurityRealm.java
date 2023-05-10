@@ -237,8 +237,8 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * Handles the logout processing.
 	 * @param req request
 	 * @param rsp response
-	 * @throws IOException
-	 * @throws ServletException
+	 * @throws IOException I/O error
+	 * @throws ServletException Servlet error
 	 */
 	@Override
 	public void doLogout(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
@@ -254,8 +254,8 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * The login process starts from here, using the CasAuthenticationEntryPoint.
 	 * @param req request
 	 * @param rsp response
-	 * @throws IOException
-	 * @throws ServletException
+	 * @throws IOException I/O error
+	 * @throws ServletException Servlet error
 	 */
 	public void doCommenceLogin(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
 		LOG.debug("Redirecting to CAS for authentication");
