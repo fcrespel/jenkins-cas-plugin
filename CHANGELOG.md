@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.6.3] - 2023-05-14
+
 - Fixed security issue (SECURITY-3000).
 
 ## [1.6.2] - 2022-05-29
@@ -79,7 +81,8 @@
 - Single Sign-Out support
 - Jenkins API Token support (no conflict)
 
-[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.2...HEAD
+[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.3...HEAD
+[1.6.3]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.2...cas-plugin-1.6.3
 [1.6.2]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.1...cas-plugin-1.6.2
 [1.6.1]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.0...cas-plugin-1.6.1
 [1.6.0]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.5.0...cas-plugin-1.6.0
