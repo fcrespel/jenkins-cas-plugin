@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.jasig.cas.client.validation.Cas30ProxyTicketValidator;
-import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
-import org.jasig.cas.client.validation.ProxyList;
-import org.jasig.cas.client.validation.TicketValidator;
-import org.jasig.cas.client.validation.json.Cas30JsonProxyTicketValidator;
-import org.jasig.cas.client.validation.json.Cas30JsonServiceTicketValidator;
+import org.apereo.cas.client.validation.Cas30ProxyTicketValidator;
+import org.apereo.cas.client.validation.Cas30ServiceTicketValidator;
+import org.apereo.cas.client.validation.ProxyList;
+import org.apereo.cas.client.validation.TicketValidator;
+import org.apereo.cas.client.validation.json.Cas30JsonProxyTicketValidator;
+import org.apereo.cas.client.validation.json.Cas30JsonServiceTicketValidator;
 import org.jenkinsci.plugins.cas.CasProtocol;
 import org.kohsuke.stapler.DataBoundConstructor;
 

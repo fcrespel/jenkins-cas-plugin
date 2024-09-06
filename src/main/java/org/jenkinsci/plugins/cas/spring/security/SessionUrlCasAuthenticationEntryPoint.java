@@ -1,10 +1,10 @@
 package org.jenkinsci.plugins.cas.spring.security;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.jasig.cas.client.util.CommonUtils;
+import org.apereo.cas.client.util.WebUtils;
 import org.jenkinsci.plugins.cas.CasSecurityRealm;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 
@@ -34,7 +34,7 @@ public class SessionUrlCasAuthenticationEntryPoint extends CasAuthenticationEntr
 	@Override
 	protected String createServiceUrl(HttpServletRequest request, HttpServletResponse response) {
 		String serviceUrl = CasSecurityRealm.getServiceUrl(request, getServiceProperties());
-		return CommonUtils.constructServiceUrl(null, response, serviceUrl, null, getServiceProperties().getServiceParameter(), getServiceProperties().getArtifactParameter(), getEncodeServiceUrlWithSessionId());
+		return WebUtils.constructServiceUrl(null, response, serviceUrl, null, getServiceProperties().getServiceParameter(), getServiceProperties().getArtifactParameter(), getEncodeServiceUrlWithSessionId());
 	}
 
 	/**

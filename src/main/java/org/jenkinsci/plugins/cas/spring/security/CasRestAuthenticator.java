@@ -10,8 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -37,6 +36,7 @@ import org.springframework.util.Assert;
  */
 public final class CasRestAuthenticator implements InitializingBean, AuthenticationManager {
 
+	private static final String CAS_STATEFUL_IDENTIFIER = "_cas_stateful_";
 	private static final String CAS_V1_TICKETS = "v1/tickets";
 	private static final String ENCODING = "UTF-8";
 	private static final Logger LOG = LoggerFactory.getLogger(CasRestAuthenticator.class);
@@ -221,7 +221,7 @@ public final class CasRestAuthenticator implements InitializingBean, Authenticat
 	}
 
 	private Authentication validateServiceTicket(String serviceTicket) {
-		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(CasAuthenticationFilter.CAS_STATEFUL_IDENTIFIER, serviceTicket);
+		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(CAS_STATEFUL_IDENTIFIER, serviceTicket);
 		authRequest.setDetails(authenticationDetailsSource.buildDetails(null));
 		return authenticationManager.authenticate(authRequest);
 	}

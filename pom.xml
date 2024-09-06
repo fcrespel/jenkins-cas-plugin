@@ -90,40 +90,42 @@ THE SOFTWARE.
 		<revision>1.6.4</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<gitHubRepo>jenkinsci/${project.artifactId}</gitHubRepo>
-		<jenkins.version>2.440.3</jenkins.version>
-		<cas-client.version>3.6.4</cas-client.version>
+		<!-- TODO https://github.com/jenkinsci/jenkins/pull/9696 -->
+		<jenkins.version>2.476-rc35309.670fcb_f703b_7</jenkins.version>
+		<!-- TODO JENKINS-73339 until in parent POM -->
+		<jenkins-test-harness.version>2265.v3da_49c8134d6</jenkins-test-harness.version>
+		<maven.compiler.release>17</maven.compiler.release>
+		<cas-client.version>4.0.4</cas-client.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.440.x</artifactId>
+				<artifactId>bom-2.462.x</artifactId>
 				<version>3334.v18e2a_2f48356</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
 			<dependency>
-				<groupId>org.jasig.cas.client</groupId>
+				<groupId>org.apereo.cas.client</groupId>
 				<artifactId>cas-client-core</artifactId>
 				<version>${cas-client.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.jasig.cas.client</groupId>
+				<groupId>org.apereo.cas.client</groupId>
 				<artifactId>cas-client-support-saml</artifactId>
 				<version>${cas-client.version}</version>
+			</dependency>
+			<!-- TODO JENKINS-73339 until in parent POM, work around https://github.com/jenkinsci/plugin-pom/issues/936 -->
+			<dependency>
+				<groupId>jakarta.servlet</groupId>
+				<artifactId>jakarta.servlet-api</artifactId>
+				<version>5.0.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
-		<dependency>
-			<groupId>io.jenkins.plugins</groupId>
-			<artifactId>jaxb</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.jenkins.plugins</groupId>
-			<artifactId>joda-time-api</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>bouncycastle-api</artifactId>
@@ -141,7 +143,7 @@ THE SOFTWARE.
 			<artifactId>script-security</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.jasig.cas.client</groupId>
+			<groupId>org.apereo.cas.client</groupId>
 			<artifactId>cas-client-support-saml</artifactId>
 			<exclusions>
 				<!-- Provided by jackson2-api plugin -->
@@ -159,13 +161,12 @@ THE SOFTWARE.
 				</exclusion>
 				<!-- Provided by Jenkins core -->
 				<exclusion>
+					<groupId>com.github.stephenc.jcip</groupId>
+					<artifactId>jcip-annotations</artifactId>
+				</exclusion>
+				<exclusion>
 					<groupId>commons-codec</groupId>
 					<artifactId>commons-codec</artifactId>
-				</exclusion>
-				<!-- Provided by joda-time-api plugin -->
-				<exclusion>
-					<groupId>joda-time</groupId>
-					<artifactId>joda-time</artifactId>
 				</exclusion>
 				<!-- Provided by bouncycastle-api plugin -->
 				<exclusion>
@@ -175,11 +176,6 @@ THE SOFTWARE.
 				<exclusion>
 					<groupId>org.bouncycastle</groupId>
 					<artifactId>bcprov-jdk15on</artifactId>
-				</exclusion>
-				<!-- Provided by jaxb plugin -->
-				<exclusion>
-					<groupId>org.glassfish.jaxb</groupId>
-					<artifactId>jaxb-core</artifactId>
 				</exclusion>
 				<!-- Provided by Jenkins core -->
 				<exclusion>

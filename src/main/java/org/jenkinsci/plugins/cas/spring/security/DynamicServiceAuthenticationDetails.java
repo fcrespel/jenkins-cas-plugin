@@ -1,6 +1,6 @@
 package org.jenkinsci.plugins.cas.spring.security;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.jenkinsci.plugins.cas.CasSecurityRealm;
 import org.springframework.security.cas.ServiceProperties;

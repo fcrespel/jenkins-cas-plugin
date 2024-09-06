@@ -1,8 +1,8 @@
 package org.jenkinsci.plugins.cas.spring.security;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
-import org.jasig.cas.client.session.SessionMappingStorage;
+import org.apereo.cas.client.session.SessionMappingStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;

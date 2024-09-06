@@ -2,11 +2,11 @@ package org.jenkinsci.plugins.cas.spring;
 
 import java.util.Collections;
 
-import org.jasig.cas.client.session.HashMapBackedSessionMappingStorage;
-import org.jasig.cas.client.session.SessionMappingStorage;
-import org.jasig.cas.client.session.SingleSignOutHandler;
-import org.jasig.cas.client.validation.AbstractUrlBasedTicketValidator;
-import org.jasig.cas.client.validation.TicketValidator;
+import org.apereo.cas.client.session.HashMapBackedSessionMappingStorage;
+import org.apereo.cas.client.session.SessionMappingStorage;
+import org.apereo.cas.client.session.SingleSignOutHandler;
+import org.apereo.cas.client.validation.AbstractUrlBasedTicketValidator;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.jenkinsci.plugins.cas.CasProtocol;
 import org.jenkinsci.plugins.cas.CasSecurityRealm;
 import org.jenkinsci.plugins.cas.spring.security.CasRestAuthenticator;
@@ -29,7 +29,7 @@ import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
-import hudson.security.ChainedServletFilter;
+import hudson.security.ChainedServletFilter2;
 import hudson.security.HttpSessionContextIntegrationFilter2;
 import hudson.security.SecurityRealm;
 
@@ -158,8 +158,8 @@ public class CasConfigurationContext {
 	}
 
 	@Bean
-	public ChainedServletFilter casFilter(HttpSessionContextIntegrationFilter2 httpSessionContextIntegrationFilter, CasSingleSignOutFilter casSingleSignOutFilter, CasAuthenticationFilter casAuthenticationFilter) {
-		return new ChainedServletFilter(httpSessionContextIntegrationFilter, casSingleSignOutFilter, casAuthenticationFilter);
+	public ChainedServletFilter2 casFilter(HttpSessionContextIntegrationFilter2 httpSessionContextIntegrationFilter, CasSingleSignOutFilter casSingleSignOutFilter, CasAuthenticationFilter casAuthenticationFilter) {
+		return new ChainedServletFilter2(httpSessionContextIntegrationFilter, casSingleSignOutFilter, casAuthenticationFilter);
 	}
 
 	@Bean

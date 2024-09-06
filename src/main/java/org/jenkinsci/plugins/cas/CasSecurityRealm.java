@@ -6,21 +6,21 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.jasig.cas.client.session.SessionMappingStorage;
-import org.jasig.cas.client.util.CommonUtils;
+import org.apereo.cas.client.session.SessionMappingStorage;
+import org.apereo.cas.client.util.CommonUtils;
 import org.jenkinsci.plugins.cas.spring.CasConfigurationContext;
 import org.jenkinsci.plugins.cas.spring.security.CasRestAuthenticator;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ import org.springframework.security.web.util.UrlUtils;
 import hudson.Extension;
 import hudson.Util;
 import hudson.model.Descriptor;
-import hudson.security.ChainedServletFilter;
+import hudson.security.ChainedServletFilter2;
 import hudson.security.SecurityRealm;
 import hudson.util.FormValidation;
 import jenkins.model.Jenkins;
@@ -168,7 +168,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	// ~ SecurityRealm implementation ===================================================================================
 
 	/**
-	 * Login begins with our {@link #doCommenceLogin(StaplerRequest, StaplerResponse)} method.
+	 * Login begins with our {@link #doCommenceLogin(StaplerRequest2, StaplerResponse2)} method.
 	 * @return Jenkins commenceLogin URL
 	 */
 	@Override
@@ -181,7 +181,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * @return CAS logout URL
 	 */
 	@Override
-	protected String getPostLogOutUrl2(StaplerRequest req, Authentication auth) {
+	protected String getPostLogOutUrl2(StaplerRequest2 req, Authentication auth) {
 		if (Boolean.TRUE.equals(this.enableLogoutRedirect)) {
 			StringBuilder logoutUrlBuilder = new StringBuilder(casServerUrl);
 			logoutUrlBuilder.append("logout?service=");
@@ -227,8 +227,8 @@ public class CasSecurityRealm extends SecurityRealm {
 	public Filter createFilter(FilterConfig filterConfig) {
 		LOG.debug("Creating CAS authentication filter");
 		Filter defaultFilter = super.createFilter(filterConfig);
-		Filter casFilter = getApplicationContext().getBean("casFilter", ChainedServletFilter.class);
-		return new ChainedServletFilter(casFilter, defaultFilter);
+		Filter casFilter = getApplicationContext().getBean("casFilter", ChainedServletFilter2.class);
+		return new ChainedServletFilter2(casFilter, defaultFilter);
 	}
 
 	// ~ Stapler controller actions =====================================================================================
@@ -241,7 +241,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * @throws ServletException Servlet error
 	 */
 	@Override
-	public void doLogout(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+	public void doLogout(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
 		// Remove session from CAS single sign-out storage
 		HttpSession session = req.getSession(false);
 		if (session != null) {
@@ -257,7 +257,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * @throws IOException I/O error
 	 * @throws ServletException Servlet error
 	 */
-	public void doCommenceLogin(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+	public void doCommenceLogin(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
 		LOG.debug("Redirecting to CAS for authentication");
 		getApplicationContext().getBean(CasAuthenticationEntryPoint.class).commence(req, rsp, null);
 	}
@@ -267,7 +267,7 @@ public class CasSecurityRealm extends SecurityRealm {
 	 * @param req request
 	 * @param rsp response
 	 */
-	public void doFinishLogin(StaplerRequest req, StaplerResponse rsp) {
+	public void doFinishLogin(StaplerRequest2 req, StaplerResponse2 rsp) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		LOG.debug("Finishing CAS login with authentication={}", authentication);
 		req.getSession(); // Force session creation
