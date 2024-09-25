@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Upgrade to Spring Security 6.x and Jakarta EE 9 (thanks to [@basil](https://github.com/basil)).
+- Compatibility with Jenkins 2.476 and higher (requires Java 17).
+- Incompatibility with Jenkins 2.475 and lower, please make sure to upgrade CAS plugin and Jenkins together.
+
 ## [1.6.3] - 2023-05-14
 
 - Fixed security issue (SECURITY-3000).
