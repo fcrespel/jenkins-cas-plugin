@@ -1,7 +1,7 @@
 package org.jenkinsci.plugins.cas.protocols;
 
-import org.jasig.cas.client.validation.Saml11TicketValidator;
-import org.jasig.cas.client.validation.TicketValidator;
+import org.apereo.cas.client.validation.Saml11TicketValidator;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.jenkinsci.plugins.cas.CasProtocol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.springframework.security.cas.SamlServiceProperties;

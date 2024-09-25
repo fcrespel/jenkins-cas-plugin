@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.jasig.cas.client.validation.TicketValidator;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.springframework.security.cas.ServiceProperties;
 
 import hudson.DescriptorExtensionList;

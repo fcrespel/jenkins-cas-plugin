@@ -13,9 +13,16 @@ The latest version is available for download from the Update Center and from the
 
 ### Upgrade notice
 
-- Jenkins **2.266 and higher** require CAS plugin version **1.5.0** or higher.
-- Jenkins **2.265 and lower** require CAS plugin version **1.4.3** (1.5.0 is _NOT_ compatible).
-- Jenkins **2.160 or 2.150.2 LTS** and higher require CAS plugin version **1.4.3**.
+Some Jenkins versions require specific CAS plugin versions for compatibility reasons:
+
+| Jenkins version    | CAS plugin version |
+|--------------------|--------------------|
+| 2.476 and higher   | 1.7.0 and higher   |
+| 2.475              | not compatible     |
+| 2.266 to 2.474     | 1.5.0 to 1.6.3     |
+| 2.160 to 2.265     | 1.4.3              |
+| 2.150.2 to 2.150.3 | 1.4.3              |
+| Older releases     | 1.4.2 and lower    |
 
 In these cases, you will need to upgrade Jenkins and CAS plugin together to avoid issues. This means manually downloading and updating the `cas-plugin.hpi` file in your Jenkins `plugins` directory (rename to `cas-plugin.jpi` as needed).
 

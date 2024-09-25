@@ -3,7 +3,7 @@ package org.jenkinsci.plugins.cas.protocols;
 import java.util.Collection;
 
 import org.codehaus.groovy.control.CompilationFailedException;
-import org.jasig.cas.client.validation.TicketValidator;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.jenkinsci.plugins.cas.CasProtocol;
 import org.jenkinsci.plugins.cas.Messages;
 import org.jenkinsci.plugins.cas.validation.Cas10RoleParsingTicketValidator;

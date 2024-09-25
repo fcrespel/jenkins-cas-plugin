@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jasig.cas.client.authentication.AttributePrincipal;
-import org.jasig.cas.client.authentication.AttributePrincipalImpl;
-import org.jasig.cas.client.validation.AbstractCasProtocolUrlBasedTicketValidator;
-import org.jasig.cas.client.validation.Assertion;
-import org.jasig.cas.client.validation.AssertionImpl;
-import org.jasig.cas.client.validation.TicketValidationException;
+import org.apereo.cas.client.authentication.AttributePrincipal;
+import org.apereo.cas.client.authentication.AttributePrincipalImpl;
+import org.apereo.cas.client.validation.AbstractCasProtocolUrlBasedTicketValidator;
+import org.apereo.cas.client.validation.Assertion;
+import org.apereo.cas.client.validation.AssertionImpl;
+import org.apereo.cas.client.validation.TicketValidationException;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript;
 
 import groovy.lang.Binding;
@@ -39,7 +39,7 @@ public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBased
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.jasig.cas.client.validation.AbstractUrlBasedTicketValidator#getUrlSuffix()
+	 * @see org.apereo.cas.client.validation.AbstractUrlBasedTicketValidator#getUrlSuffix()
 	 */
 	protected String getUrlSuffix() {
 		return "validate";
@@ -47,7 +47,7 @@ public class Cas10RoleParsingTicketValidator extends AbstractCasProtocolUrlBased
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.jasig.cas.client.validation.AbstractUrlBasedTicketValidator#parseResponseFromServer(java.lang.String)
+	 * @see org.apereo.cas.client.validation.AbstractUrlBasedTicketValidator#parseResponseFromServer(java.lang.String)
 	 */
 	protected Assertion parseResponseFromServer(final String response) throws TicketValidationException {
 		if (!response.startsWith("yes")) {

@@ -10,8 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +21,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.cas.web.CasAuthenticationFilter;
-import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetails;
+import org.springframework.security.cas.authentication.CasServiceTicketAuthenticationToken;
+import org.springframework.security.cas.authentication.ServiceAuthenticationDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.Assert;
@@ -126,6 +126,7 @@ public final class CasRestAuthenticator implements InitializingBean, Authenticat
 		String grantingTicket = null;
 		HttpURLConnection connection = null;
 		try {
+			LOG.debug("Fetching ticket granting ticket from CAS REST API");
 			connection = openConnection(createGrantingTicketUrl());
 			String post = createGrantingTicketPostContent(username, password);
 			writeContent(connection, post);
@@ -164,6 +165,7 @@ public final class CasRestAuthenticator implements InitializingBean, Authenticat
 	private void destroyGrantingTicket(String grantingTicket) {
 		HttpURLConnection connection = null;
 		try {
+			LOG.debug("Destroying ticket granting ticket from CAS REST API");
 			connection = openConnection(createServiceTicketUrl(grantingTicket), "DELETE");
 			int rc = connection.getResponseCode();
 			if (rc != HttpServletResponse.SC_OK) {
@@ -192,6 +194,7 @@ public final class CasRestAuthenticator implements InitializingBean, Authenticat
 		String serviceTicket = null;
 		HttpURLConnection connection = null;
 		try {
+			LOG.debug("Fetching service ticket from CAS REST API");
 			connection = openConnection(createServiceTicketUrl(grantingTicket));
 			String post = createServiceTicketPostContent();
 			writeContent(connection, post);
@@ -221,7 +224,8 @@ public final class CasRestAuthenticator implements InitializingBean, Authenticat
 	}
 
 	private Authentication validateServiceTicket(String serviceTicket) {
-		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(CasAuthenticationFilter.CAS_STATEFUL_IDENTIFIER, serviceTicket);
+		LOG.debug("Validating service ticket from CAS REST API");
+		CasServiceTicketAuthenticationToken authRequest = CasServiceTicketAuthenticationToken.stateful(serviceTicket);
 		authRequest.setDetails(authenticationDetailsSource.buildDetails(null));
 		return authenticationManager.authenticate(authRequest);
 	}
