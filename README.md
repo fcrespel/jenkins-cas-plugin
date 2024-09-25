@@ -30,7 +30,7 @@ In these cases, you will need to upgrade Jenkins and CAS plugin together to avoi
 ## Building from source
 
 1. Checkout or download the source code from the current master or latest tag on GitHub.
-2. Execute `mvn clean verify` from your local source code folder (install [Maven](http://maven.apache.org) if not already done).
+2. Execute `mvn clean verify` from your local source code folder (install [Maven](https://maven.apache.org) if not already done).
 3. Find the `cas-plugin.hpi` file in the `target` subfolder.
 4. Upload it to Jenkins from the _Advanced_ tab of the _Manage Plugins_ page.
 
@@ -50,7 +50,7 @@ In these cases, you will need to upgrade Jenkins and CAS plugin together to avoi
 Additional configuration options are available under the **Security Realm** section:
 
 - **Force authentication renewal:** when checked, Single Sign-On (SSO) is disabled: even if a CAS session is already open, the user will have to provide credentials again to confirm his/her identity.
-- **Use CAS REST API for external/scripted clients:** when checked, the [CAS REST API](https://apereo.github.io/cas/6.2.x/protocol/REST-Protocol.html) will be used to authenticate Jenkins API requests (in addition to Jenkins API keys) using a username/password.
+- **Use CAS REST API for external/scripted clients:** when checked, the [CAS REST API](https://apereo.github.io/cas/development/protocol/REST-Protocol.html) will be used to authenticate Jenkins API requests (in addition to Jenkins API keys) using a username/password.
 - **Process Single Logout (SLO) requests from CAS:** when checked, Single Logout is enabled: whenever the user logs out of CAS (e.g. when logging out of another CAS-enabled application), the corresponding Jenkins session will be destroyed and the local user logged out as well. Note that for this to work, the CAS server must be able to communicate with Jenkins using the service URL that was passed to it during login.
 - **Logout from CAS when logging out of Jenkins:** when checked, Jenkins will redirect to CAS after logging out the local user, in order to destroy the SSO session.
 
@@ -61,7 +61,7 @@ Several protocols implemented by CAS are available in the **CAS Protocol** dropd
 - **CAS 3.0:** a XML or JSON-based protocol. It supports **Proxy Tickets**, allowing external applications already secured with CAS to authenticate in Jenkins without requiring user input or password. It fully supports attributes out-of-the-box, without requiring custom extensions. **This is a recommended protocol for Apereo CAS Server 4.x and higher.**
 - **SAML 1.1:** a XML-based protocol. It fully supports attributes out-of-the-box, without requiring custom extensions. **This is a recommended protocol for Apereo CAS Server 3.x and higher.**
 
-[Attributes](https://apereo.github.io/cas/6.2.x/integration/Attribute-Release.html) are an easy (and recommended) way to add full name and email address information to an authenticated user, as well as roles/groups membership. CAS 1.0 response parsing with a custom Groovy script is made available as a legacy option for backward compatibility with the [CAS1 Plugin](https://wiki.jenkins.io/display/JENKINS/CAS1+Plugin).
+[Attributes](https://apereo.github.io/cas/development/integration/Attribute-Release.html) are an easy (and recommended) way to add full name and email address information to an authenticated user, as well as roles/groups membership. CAS 1.0 response parsing with a custom Groovy script is made available as a legacy option for backward compatibility with the [CAS1 Plugin](https://wiki.jenkins.io/display/JENKINS/CAS1+Plugin).
 
 
 ## Usage
@@ -73,9 +73,9 @@ By default, when using the CAS plugin for authentication, you **cannot use a reg
 You have two options:
 
 - Use the user's **API token** as the password; you can find it by going to the **Configuration** page of the **Jenkins user** you intend to use for external access. This API token does not expire and you may regenerate it as you need.
-- Enable the **REST API** option in the plugin configuration, to use the [CAS REST API](https://apereo.github.io/cas/6.2.x/protocol/REST-Protocol.html) to process the real username/password. The CAS REST protocol must be enabled server-side for this option to work.
+- Enable the **REST API** option in the plugin configuration, to use the [CAS REST API](https://apereo.github.io/cas/development/protocol/REST-Protocol.html) to process the real username/password. The CAS REST protocol must be enabled server-side for this option to work.
 
-See the following page for more information: [Authenticating scripted clients](https://wiki.jenkins.io/display/JENKINS/Authenticating+scripted+clients)
+See the following page for more information: [Authenticating scripted clients](https://www.jenkins.io/doc/book/system-administration/authenticating-scripted-clients/)
 
 ### Jenkins URL when used behind a reverse proxy
 
@@ -89,7 +89,7 @@ When using Jenkins behind a reverse proxy, depending on configuration the URL us
 
 ### SSL certificate issues
 
-Please see the [Troubleshooting Guide](https://apereo.github.io/cas/6.2.x/installation/Troubleshooting-Guide.html#pkix-path-building-failed) from the CAS Project.
+Please see the [Troubleshooting Guide](https://apereo.github.io/cas/development/installation/Troubleshooting-Guide.html#pkix-path-building-failed) from the CAS Project.
 
 ### Issue validating SAML 1.1 tickets
 
@@ -99,6 +99,10 @@ If Jenkins systematically fails to validate SAML 1.1 tickets, make sure to check
 
 By default, using normal username/password is not possible from external/scripted clients when using CAS. You may use an **API token** instead and/or enable the **REST API** support. See "Usage" section above for more details.
 
+### Checking group memberships
+
+To check actual group memberships extracted from configured CAS attributes, go to `http://your-jenkins-server/whoAmI/` and look for the **Authorities** list.
+
 ### Missing group memberships when logging with external/scripted clients
 
 This issue ([JENKINS-20064](https://issues.jenkins-ci.org/browse/JENKINS-20064)) is fixed in Jenkins 1.556 and higher, provided that the user logged in through the web interface at least once. This limitation does not apply when the REST API option is enabled along with the real username/password.
@@ -107,8 +111,25 @@ This issue ([JENKINS-20064](https://issues.jenkins-ci.org/browse/JENKINS-20064))
 
 If Jenkins is behind a reverse proxy, it may not be able to detect its own URL by itself. In this case, you need to manually configure the Jenkins URL. See "Usage" section above for a solution.
 
+### Analyzing detailed logs
+
+If you cannot understand the root cause of an issue, you may try to enable detailed logs:
+
+1. Go to **Manage Jenkins** > **System Log**.
+2. Click **Add recorder**, type a name (e.g. `cas-plugin`) and click **Create**.
+3. **Add** the following loggers:
+   - `org.apereo.cas`
+   - `org.jenkinsci.plugins.cas`
+   - `org.springframework.security.cas`
+4. Click **Save**, try to reproduce the issue, then refresh the logs view.
+5. If you need even more details, you may try adding these loggers as well:
+   - `hudson.security`
+   - `jenkins.security`
+   - `org.springframework.security`
+
 
 ## Documentation
 
 - [Changelog](CHANGELOG.md)
 - [Javadoc](https://javadoc.jenkins.io/plugin/cas-plugin/)
+- [CAS documentation](https://apereo.github.io/cas/)
