@@ -87,7 +87,7 @@ THE SOFTWARE.
 	</pluginRepositories>
 
 	<properties>
-		<revision>1.6.4</revision>
+		<revision>1.7.0</revision>
 		<changelist>-SNAPSHOT</changelist>
 		<gitHubRepo>jenkinsci/${project.artifactId}</gitHubRepo>
 		<jenkins.version>2.476</jenkins.version>
