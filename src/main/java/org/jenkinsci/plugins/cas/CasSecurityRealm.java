@@ -209,6 +209,7 @@ public class CasSecurityRealm extends SecurityRealm {
 				if (authentication instanceof AnonymousAuthenticationToken) {
 					return authentication;
 				} else if ((authentication instanceof UsernamePasswordAuthenticationToken) && Boolean.TRUE.equals(enableRestApi)) {
+					LOG.debug("Authenticating UsernamePasswordAuthenticationToken with CAS REST API");
 					return getApplicationContext().getBean(CasRestAuthenticator.class).authenticate(authentication);
 				} else {
 					throw new BadCredentialsException("Unexpected authentication type: " + authentication);

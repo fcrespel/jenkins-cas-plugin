@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.jenkinsci.plugins.cas.CasSecurityRealm;
 import org.springframework.security.cas.ServiceProperties;
-import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetails;
+import org.springframework.security.cas.authentication.ServiceAuthenticationDetails;
 
 /**
  * {@code ServiceAuthenticationDetails} implementation that will convert a relative

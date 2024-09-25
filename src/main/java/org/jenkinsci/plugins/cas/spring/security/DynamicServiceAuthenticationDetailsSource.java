@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.cas.ServiceProperties;
-import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetails;
+import org.springframework.security.cas.authentication.ServiceAuthenticationDetails;
 
 /**
  * {@code AuthenticationDetailsSource} implementation returning a
