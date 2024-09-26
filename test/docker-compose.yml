@@ -1,0 +1,20 @@
+services:
+  cas:
+    image: apereo/cas:7.0.8
+    restart: on-failure
+    network_mode: host
+    volumes:
+    - './cas:/etc/cas'
+
+  jenkins:
+    image: jenkins/jenkins:latest
+    restart: on-failure
+    network_mode: host
+    environment:
+    - 'JAVA_OPTS=-Djavax.net.ssl.trustStore=/usr/share/jenkins/ref/cacerts -Djenkins.install.runSetupWizard=false'
+    volumes:
+    - './jenkins:/usr/share/jenkins/ref'
+    - 'jenkins:/var/jenkins_home'
+
+volumes:
+  jenkins:

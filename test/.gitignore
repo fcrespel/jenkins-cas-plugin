@@ -1,0 +1,3 @@
+cas/thekeystore
+jenkins/cacerts
+jenkins/plugins/*

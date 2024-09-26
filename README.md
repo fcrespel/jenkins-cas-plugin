@@ -27,14 +27,6 @@ Some Jenkins versions require specific CAS plugin versions for compatibility rea
 In these cases, you will need to upgrade Jenkins and CAS plugin together to avoid issues. This means manually downloading and updating the `cas-plugin.hpi` file in your Jenkins `plugins` directory (rename to `cas-plugin.jpi` as needed).
 
 
-## Building from source
-
-1. Checkout or download the source code from the current master or latest tag on GitHub.
-2. Execute `mvn clean verify` from your local source code folder (install [Maven](https://maven.apache.org) if not already done).
-3. Find the `cas-plugin.hpi` file in the `target` subfolder.
-4. Upload it to Jenkins from the _Advanced_ tab of the _Manage Plugins_ page.
-
-
 ## Setup
 
 ### Basic Setup
@@ -126,6 +118,26 @@ If you cannot understand the root cause of an issue, you may try to enable detai
    - `hudson.security`
    - `jenkins.security`
    - `org.springframework.security`
+
+
+## Building and testing
+
+### Building from source
+
+1. Checkout or download the source code from the current master or latest tag on GitHub.
+2. Execute `mvn clean verify` from your local source code folder (install [Maven](https://maven.apache.org) if not already done).
+3. Find the `cas-plugin.hpi` file in the `target` subfolder.
+4. Upload it to Jenkins from the _Advanced_ tab of the _Manage Plugins_ page.
+
+### Testing locally
+
+The `test` directory contains Docker containers and configuration to run a CAS server locally alongside Jenkins for testing.
+
+1. As a prerequisite, make sure [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/) are installed.
+2. Run `./test.sh` in this directory to start the test environment.
+3. Open Jenkins at [http://localhost:8080](http://localhost:8080) and click **Login** to be redirected to CAS.
+4. Authenticate with the default user `casuser` and password `Mellon`.
+5. Check that Jenkins is now authenticated as `casuser`.
 
 
 ## Documentation

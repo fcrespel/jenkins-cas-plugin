@@ -1,0 +1,28 @@
+cas:
+  authn:
+    accept:
+      users: casuser::Mellon
+    attribute-repository:
+      stub:
+        attributes:
+          cn: CAS User
+          givenName: CAS
+          mail: casuser@example.org
+          roles: admin
+          sn: User
+  http-client:
+    allow-local-urls: true
+    authority-validation-regex: .*
+  logout:
+    follow-service-redirects: true
+  server:
+    name: https://localhost:8443
+    prefix: ${cas.server.name}/cas
+  service-registry:
+    core:
+      init-from-json: true
+    json:
+      location: file:///etc/cas/services
+logging:
+  level:
+    org.apereo.cas: debug

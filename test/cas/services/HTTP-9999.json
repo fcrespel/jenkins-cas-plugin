@@ -1,0 +1,11 @@
+{
+  "@class": "org.apereo.cas.services.CasRegisteredService",
+  "serviceId": "^https?://.*",
+  "name": "HTTP",
+  "id": 9999,
+  "description": "This service definition authorizes all application URLs that support the HTTP(S) protocol.",
+  "evaluationOrder": 9999,
+  "attributeReleasePolicy" : {
+    "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+  }
+}
