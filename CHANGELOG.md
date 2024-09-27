@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.7.0] - 2024-09-27
+
 - Upgrade to Spring Security 6.x and Jakarta EE 9 (thanks to [@basil](https://github.com/basil)).
 - Compatibility with Jenkins 2.476 and higher (requires Java 17).
 - Incompatibility with Jenkins 2.475 and lower, please make sure to upgrade CAS plugin and Jenkins together.
@@ -85,7 +87,8 @@
 - Single Sign-Out support
 - Jenkins API Token support (no conflict)
 
-[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.3...HEAD
+[Unreleased]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.7.0...HEAD
+[1.7.0]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.3...cas-plugin-1.7.0
 [1.6.3]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.2...cas-plugin-1.6.3
 [1.6.2]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.1...cas-plugin-1.6.2
 [1.6.1]: https://github.com/jenkinsci/cas-plugin/compare/cas-plugin-1.6.0...cas-plugin-1.6.1
