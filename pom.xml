@@ -34,7 +34,7 @@ THE SOFTWARE.
 	</parent>
 
 	<artifactId>cas-plugin</artifactId>
-	<version>${revision}${changelist}</version>
+	<version>1.7.0</version>
 	<packaging>hpi</packaging>
 	<name>CAS Plugin</name>
 	<url>https://github.com/jenkinsci/${project.artifactId}</url>
@@ -43,7 +43,7 @@ THE SOFTWARE.
 		<connection>scm:git:https://github.com/${gitHubRepo}.git</connection>
 		<developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
 		<url>https://github.com/${gitHubRepo}</url>
-		<tag>${scmTag}</tag>
+		<tag>cas-plugin-1.7.0</tag>
 	</scm>
 
 	<developers>
