@@ -1,6 +1,6 @@
 services:
   cas:
-    image: apereo/cas:7.0.8
+    image: apereo/cas:7.3.8
     restart: on-failure
     network_mode: host
     volumes:
