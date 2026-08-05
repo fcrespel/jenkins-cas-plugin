@@ -93,6 +93,9 @@ THE SOFTWARE.
 		<!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
 		<jenkins.baseline>2.479</jenkins.baseline>
 		<jenkins.version>${jenkins.baseline}.3</jenkins.version>
+		<ban-commons-lang-2.skip>false</ban-commons-lang-2.skip>
+		<hpi.bundledArtifacts>cas-client-core,cas-client-support-saml,nimbus-jose-jwt,spring-security-cas</hpi.bundledArtifacts>
+		<hpi.strictBundledArtifacts>true</hpi.strictBundledArtifacts>
 		<cas-client.version>4.0.4</cas-client.version>
 	</properties>
 
