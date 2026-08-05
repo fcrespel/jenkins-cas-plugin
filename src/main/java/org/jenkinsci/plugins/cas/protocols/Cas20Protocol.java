@@ -3,7 +3,7 @@ package org.jenkinsci.plugins.cas.protocols;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.client.validation.Cas20ProxyTicketValidator;
 import org.apereo.cas.client.validation.Cas20ServiceTicketValidator;
 import org.apereo.cas.client.validation.ProxyList;

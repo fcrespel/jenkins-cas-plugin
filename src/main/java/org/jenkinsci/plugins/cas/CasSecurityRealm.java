@@ -12,7 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.client.session.SessionMappingStorage;
 import org.apereo.cas.client.util.CommonUtils;
 import org.jenkinsci.plugins.cas.spring.CasConfigurationContext;
