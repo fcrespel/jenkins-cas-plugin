@@ -28,7 +28,7 @@ else
 fi
 
 echo "Downloading required plugins"
-docker compose -f "$COMPOSE_FILE" run --rm jenkins jenkins-plugin-cli -p bouncycastle-api jackson2-api mailer script-security
+docker compose -f "$COMPOSE_FILE" run --rm jenkins jenkins-plugin-cli -p bouncycastle-api commons-lang3-api jackson2-api mailer script-security
 
 echo "Copying CAS plugin to Jenkins plugins directory"
 if [ -e "$PLUGIN_SRC" ]; then
