@@ -29,7 +29,7 @@ THE SOFTWARE.
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>5.6</version>
+		<version>6.2211.v27f680c93c53</version>
 		<relativePath />
 	</parent>
 
