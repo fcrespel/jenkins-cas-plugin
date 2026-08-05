@@ -93,7 +93,7 @@ THE SOFTWARE.
 		<!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
 		<jenkins.baseline>2.479</jenkins.baseline>
 		<jenkins.version>${jenkins.baseline}.1</jenkins.version>
-		<cas-client.version>4.0.4</cas-client.version>
+		<cas-client.version>4.1.1</cas-client.version>
 	</properties>
 
 	<dependencyManagement>
